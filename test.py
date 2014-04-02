@@ -89,14 +89,15 @@ class TOTPExampleValuesFromTheRFC(unittest.TestCase):
         # 0 padded strings must be accepted
         self.assertTrue(totp.verify('050471', 1111111111))
         self.assertTrue(totp.verify('005924', 1234567890))
+        # 0 padded strings must be accepted even if they have more digits than
+        # allowed
+        self.assertTrue(totp.verify('0279037', 2000000000))
         # unicode objects must be accepted
         self.assertTrue(totp.verify(u'050471', 1111111111))
         # verify must deny wrong codes
         self.assertFalse(totp.verify(50472, 1111111111))
         self.assertFalse(totp.verify('abcdef', 2000000000))
-        # strings with more than 6 chars must not be accepted
         self.assertFalse(totp.verify('1279037', 2000000000))
-        self.assertFalse(totp.verify('0279037', 2000000000))
 
 class Timecop(object):
     """
