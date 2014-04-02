@@ -35,7 +35,7 @@ class TOTP(OTP):
         Verifies the OTP passed in against the current time OTP
         @param [String/Integer] otp the OTP to check against
         """
-        if isinstance(otp, basestring) and len(otp) > 6:
+        if isinstance(otp, basestring) and len(otp) > self.digits:
             return False
         if for_time is None:
             for_time = datetime.datetime.now()
