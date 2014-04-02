@@ -35,10 +35,15 @@ class TOTP(OTP):
         Verifies the OTP passed in against the current time OTP
         @param [String/Integer] otp the OTP to check against
         """
+        if isinstance(otp, basestring) and len(otp) > 6:
+            return False
         if for_time is None:
             for_time = datetime.datetime.now()
-
-        return unicode(otp) == unicode(self.at(for_time))
+        try:
+            otp = int(otp)
+        except ValueError:
+            return False
+        return otp  == self.at(for_time)
 
     def provisioning_uri(self, name, issuer_name=None):
         """

@@ -76,6 +76,27 @@ class TOTPExampleValuesFromTheRFC(unittest.TestCase):
             totp.provisioning_uri('mark@percival', issuer_name='FooCorp!'),
             'otpauth://totp/FooCorp%21:mark@percival?secret=wrn3pqx5uqxqvnqr&issuer=FooCorp%21')
 
+    def testVerify(self):
+        totp = pyotp.TOTP('GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ')
+        # verify must work with integers
+        self.assertTrue(totp.verify(50471, 1111111111))
+        self.assertTrue(totp.verify(5924, 1234567890))
+        self.assertTrue(totp.verify(279037, 2000000000))
+        # if the input is a string with <= 6 chars, accept it too
+        self.assertTrue(totp.verify('50471', 1111111111))
+        self.assertTrue(totp.verify('5924', 1234567890))
+        self.assertTrue(totp.verify('279037', 2000000000))
+        # 0 padded strings must be accepted
+        self.assertTrue(totp.verify('050471', 1111111111))
+        self.assertTrue(totp.verify('005924', 1234567890))
+        # unicode objects must be accepted
+        self.assertTrue(totp.verify(u'050471', 1111111111))
+        # verify must deny wrong codes
+        self.assertFalse(totp.verify(50472, 1111111111))
+        self.assertFalse(totp.verify('abcdef', 2000000000))
+        # strings with more than 6 chars must not be accepted
+        self.assertFalse(totp.verify('1279037', 2000000000))
+        self.assertFalse(totp.verify('0279037', 2000000000))
 
 class Timecop(object):
     """
