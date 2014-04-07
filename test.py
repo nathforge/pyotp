@@ -30,6 +30,11 @@ class HOTPExampleValuesFromTheRFC(unittest.TestCase):
         self.assertFalse(hotp.verify(520489, 10))
         self.assertFalse(hotp.verify("520489", 10))
 
+        self.assertTrue(hotp.verify('520489', 9))
+        self.assertTrue(hotp.verify('0000520489', 9))
+        self.assertFalse(hotp.verify('1520489', 9))
+        self.assertFalse(hotp.verify('abcdef', 9))
+
     def testProvisioningURI(self):
         hotp = pyotp.HOTP('wrn3pqx5uqxqvnqr')
 
@@ -76,6 +81,28 @@ class TOTPExampleValuesFromTheRFC(unittest.TestCase):
             totp.provisioning_uri('mark@percival', issuer_name='FooCorp!'),
             'otpauth://totp/FooCorp%21:mark@percival?secret=wrn3pqx5uqxqvnqr&issuer=FooCorp%21')
 
+    def testVerify(self):
+        totp = pyotp.TOTP('GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ')
+        # verify must work with integers
+        self.assertTrue(totp.verify(50471, 1111111111))
+        self.assertTrue(totp.verify(5924, 1234567890))
+        self.assertTrue(totp.verify(279037, 2000000000))
+        # if the input is a string with <= 6 chars, accept it too
+        self.assertTrue(totp.verify('50471', 1111111111))
+        self.assertTrue(totp.verify('5924', 1234567890))
+        self.assertTrue(totp.verify('279037', 2000000000))
+        # 0 padded strings must be accepted
+        self.assertTrue(totp.verify('050471', 1111111111))
+        self.assertTrue(totp.verify('005924', 1234567890))
+        # 0 padded strings must be accepted even if they have more digits than
+        # allowed
+        self.assertTrue(totp.verify('0279037', 2000000000))
+        # unicode objects must be accepted
+        self.assertTrue(totp.verify(u'050471', 1111111111))
+        # verify must deny wrong codes
+        self.assertFalse(totp.verify(50472, 1111111111))
+        self.assertFalse(totp.verify('abcdef', 2000000000))
+        self.assertFalse(totp.verify('1279037', 2000000000))
 
 class Timecop(object):
     """

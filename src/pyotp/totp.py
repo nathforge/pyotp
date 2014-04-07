@@ -37,8 +37,11 @@ class TOTP(OTP):
         """
         if for_time is None:
             for_time = datetime.datetime.now()
-
-        return unicode(otp) == unicode(self.at(for_time))
+        try:
+            otp = int(otp)
+        except ValueError:
+            return False
+        return otp  == self.at(for_time)
 
     def provisioning_uri(self, name, issuer_name=None):
         """
