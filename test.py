@@ -30,6 +30,11 @@ class HOTPExampleValuesFromTheRFC(unittest.TestCase):
         self.assertFalse(hotp.verify(520489, 10))
         self.assertFalse(hotp.verify("520489", 10))
 
+        self.assertTrue(hotp.verify('520489', 9))
+        self.assertTrue(hotp.verify('0000520489', 9))
+        self.assertFalse(hotp.verify('1520489', 9))
+        self.assertFalse(hotp.verify('abcdef', 9))
+
     def testProvisioningURI(self):
         hotp = pyotp.HOTP('wrn3pqx5uqxqvnqr')
 
