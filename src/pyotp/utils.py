@@ -1,4 +1,4 @@
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 
 def build_uri(secret, name, initial_count=None, issuer_name=None):
@@ -28,11 +28,11 @@ def build_uri(secret, name, initial_count=None, issuer_name=None):
     base = 'otpauth://%s/' % otp_type
 
     if issuer_name:
-        issuer_name = urllib.quote(issuer_name)
+        issuer_name = urllib.parse.quote(issuer_name)
         base += '%s:' % issuer_name
 
     uri = '%(base)s%(name)s?secret=%(secret)s' % {
-        'name': urllib.quote(name, safe='@'),
+        'name': urllib.parse.quote(name, safe='@'),
         'secret': secret,
         'base': base,
     }

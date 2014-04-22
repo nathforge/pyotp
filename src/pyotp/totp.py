@@ -38,7 +38,7 @@ class TOTP(OTP):
         if for_time is None:
             for_time = datetime.datetime.now()
 
-        return unicode(otp) == unicode(self.at(for_time))
+        return str(otp) == str(self.at(for_time))
 
     def provisioning_uri(self, name, issuer_name=None):
         """
