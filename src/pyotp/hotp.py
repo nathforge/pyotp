@@ -17,7 +17,7 @@ class HOTP(OTP):
         @param [String/Integer] otp the OTP to check against
         @param [Integer] counter the counter of the OTP
         """
-        return str(otp) == str(self.at(counter))
+        return utils.str(otp) == utils.str(self.at(counter))
 
     def provisioning_uri(self, name, initial_count=0, issuer_name=None):
         """
