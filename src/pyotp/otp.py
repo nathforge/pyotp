@@ -1,7 +1,8 @@
+import pyotp.utils as utils
+
 import base64
 import hashlib
 import hmac
-
 
 class OTP(object):
     def __init__(self, s, digits=6, digest=hashlib.sha1):
@@ -31,11 +32,11 @@ class OTP(object):
             self.digest,
         ).digest()
         
-        offset = hmac_hash[19] & 0xf
-        code = ((hmac_hash[offset] & 0x7f) << 24 |
-            (hmac_hash[offset + 1] & 0xff) << 16 |
-            (hmac_hash[offset + 2] & 0xff) << 8 |
-            (hmac_hash[offset + 3] & 0xff))
+        offset = utils.ord(hmac_hash[19]) & 0xf
+        code = ((utils.ord(hmac_hash[offset]) & 0x7f) << 24 |
+            (utils.ord(hmac_hash[offset + 1]) & 0xff) << 16 |
+            (utils.ord(hmac_hash[offset + 2]) & 0xff) << 8 |
+            (utils.ord(hmac_hash[offset + 3]) & 0xff))
         return code % 10 ** self.digits
 
     def generate_static_length_otp(self, *args, **kwargs):
@@ -64,4 +65,4 @@ class OTP(object):
         while int != 0:
             result.append(chr(int & 0xFF))
             int = int >> 8
-        return ''.join(reversed(result)).rjust(padding, '\0').encode('latin')
+        return utils.byte_encode(''.join(reversed(result)).rjust(padding, '\0')) #.encode('latin')
