@@ -1,5 +1,15 @@
-import urllib
+import sys
 
+if sys.version_info < (3,):
+    from urllib import quote
+    str = unicode
+    ord = ord
+    byte_encode = lambda b:b
+else:
+    from urllib.parse import quote
+    str = str
+    ord = lambda i:i  # This is used on a byte-string which in Py3, when indexed, is int.
+    byte_encode = lambda s:s.encode('latin')
 
 def build_uri(secret, name, initial_count=None, issuer_name=None):
     """
@@ -28,11 +38,11 @@ def build_uri(secret, name, initial_count=None, issuer_name=None):
     base = 'otpauth://%s/' % otp_type
 
     if issuer_name:
-        issuer_name = urllib.quote(issuer_name)
+        issuer_name = quote(issuer_name)
         base += '%s:' % issuer_name
 
     uri = '%(base)s%(name)s?secret=%(secret)s' % {
-        'name': urllib.quote(name, safe='@'),
+        'name': quote(name, safe='@'),
         'secret': secret,
         'base': base,
     }

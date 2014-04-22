@@ -1,7 +1,8 @@
+import pyotp.utils as utils
+
 import base64
 import hashlib
 import hmac
-
 
 class OTP(object):
     def __init__(self, s, digits=6, digest=hashlib.sha1):
@@ -31,12 +32,25 @@ class OTP(object):
             self.digest,
         ).digest()
         
-        offset = ord(hmac_hash[19]) & 0xf
-        code = ((ord(hmac_hash[offset]) & 0x7f) << 24 |
-            (ord(hmac_hash[offset + 1]) & 0xff) << 16 |
-            (ord(hmac_hash[offset + 2]) & 0xff) << 8 |
-            (ord(hmac_hash[offset + 3]) & 0xff))
+        offset = utils.ord(hmac_hash[19]) & 0xf
+        code = ((utils.ord(hmac_hash[offset]) & 0x7f) << 24 |
+            (utils.ord(hmac_hash[offset + 1]) & 0xff) << 16 |
+            (utils.ord(hmac_hash[offset + 2]) & 0xff) << 8 |
+            (utils.ord(hmac_hash[offset + 3]) & 0xff))
         return code % 10 ** self.digits
+
+    def generate_static_length_otp(self, *args, **kwargs):
+        """
+        Wraps generate_otp to provide string output that is 
+        consistent in length, even with leading zeroes.
+        This may even be security-relevant in cases where the
+        size of a code can be observed over a channel and
+        leading zero-length inferred.
+        """
+        # Create a format-string according to the specification mini-language to
+        # zero-pad codes beginning with "0", then call format upon it. Otherwise,
+        # codes are returned as integers and leading zeroes auto-ignored.
+        return '{{0:0{0:d}d}}'.format(self.digits).format(self.generate_otp(*args, **kwargs))
     
     def byte_secret(self):
         return base64.b32decode(self.secret, casefold=True)
@@ -51,4 +65,4 @@ class OTP(object):
         while int != 0:
             result.append(chr(int & 0xFF))
             int = int >> 8
-        return ''.join(reversed(result)).rjust(padding, '\0')
+        return utils.byte_encode(''.join(reversed(result)).rjust(padding, '\0')) #.encode('latin')
