@@ -237,6 +237,11 @@ class TOTPExampleValuesFromTheRFC(unittest.TestCase):
         self.assertEqual(len(pyotp.random_base32()), 16)
         self.assertEqual(len(pyotp.random_base32(length=20)), 20)
 
+    def test_valid_until(self):
+        totp = pyotp.TOTP('wrn3pqx5uqxqvnqr')
+        with Timecop(1297553958):
+            self.assertEqual(totp.valid_until(datetime.datetime.now()), datetime.datetime(2011, 02, 12, 15, 39, 30))
+
 
 class CompareDigestTest(unittest.TestCase):
     method = staticmethod(pyotp.utils.compare_digest)

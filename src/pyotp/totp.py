@@ -90,3 +90,15 @@ class TOTP(OTP):
     def timecode(self, for_time):
         i = time.mktime(for_time.timetuple())
         return int(i / self.interval)
+
+    def valid_until(self, for_time):
+        """
+        Returns the time that a code will expire, given a Time object
+        (datetime.datetime)
+        @param [Time] Time object
+        @return [Time] time the code that would be generated at `for_time`
+        is valid until
+        """
+        valid_time = (self.timecode(for_time) + 1) * self.interval
+        valid_datetime = datetime.datetime.fromtimestamp(valid_time)
+        return valid_datetime
