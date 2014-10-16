@@ -64,16 +64,6 @@ Now run the following and compare the output
     import pyotp totp = pyotp.TOTP("JBSWY3DPEHPK3PXP")
     print "Current OTP: %s" % totp.now()
 
-#### Changelog
-
-#### 1.3.1
-
-- Added support to generate accurate 6 digit codes as per RFC
-
-#### 1.3.0
-
-- Ported to Python
-
 ### See also:
 
 Original Ruby version of ROTP by [Mark Percival](https://github.com/mdp)
