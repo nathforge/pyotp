@@ -46,12 +46,20 @@ class TOTP(OTP):
         Verifies the OTP passed in against the current and former time OTP
         @return [Integer] the OTP as an integer
         """
-        if not for_time:
+        if for_time is None:
             for_time = datetime.datetime.now()
-        former_time = for_time - datetime.timedelta(seconds=30)
-        if self.verify(otp, for_time) or self.verify(otp, former_time):
-            return True
-        return False
+        for_time_former = (for_time - datetime.timedelta(seconds=30))
+        for_time_former = time.mktime(for_time_former.timetuple())
+
+        if valid_window:
+            for i in range(-valid_window, valid_window + 1):
+                if utils.strings_equal(str(otp), str(self.at(for_time, i))) or \
+                        utils.strings_equal(str(otp), str(self.at(for_time_former, i))):
+                    return True
+            return False
+
+        return utils.strings_equal(str(otp), str(self.at(for_time))) or \
+               utils.strings_equal(str(otp), str(self.at(for_time_former)))
 
     def verify(self, otp, for_time=None, valid_window=0):
         """
