@@ -49,7 +49,7 @@ class OTP(object):
         missing_padding = len(self.secret) % 8
         if missing_padding != 0:
             self.secret += '=' * (8 - missing_padding)
-        return base64.b32decode(self.secret, casefold=True)
+        return base64.b32decode(bytes(self.secret, 'utf-8'), casefold=True)
 
     @staticmethod
     def int_to_bytestring(i, padding=8):
