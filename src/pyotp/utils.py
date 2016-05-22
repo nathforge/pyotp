@@ -77,9 +77,6 @@ def strings_equal(s1, s2):
     except ImportError:
         pass
 
-    if len(s1) != len(s2):
-        return False
-
     differences = 0
     for c1, c2 in izip_longest(s1, s2, '\0'):
         differences |= ord(c1) ^ ord(c2)
