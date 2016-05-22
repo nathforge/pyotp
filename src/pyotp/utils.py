@@ -78,6 +78,8 @@ def strings_equal(s1, s2):
         pass
 
     differences = 0
-    for c1, c2 in izip_longest(s1, s2, '\0'):
+    for c1, c2 in izip_longest(s1, s2):
+        if c1 is None or c2 is None:
+            pass
         differences |= ord(c1) ^ ord(c2)
     return differences == 0
