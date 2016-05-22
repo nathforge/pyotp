@@ -55,6 +55,20 @@ def build_uri(secret, name, initial_count=None, issuer_name=None):
 
     return uri
 
+try:
+    # Python 3.3+ and 2.7.7+ include a timing-attack-resistant
+    # comparison function, which is probably more reliable than ours.
+    # Use it if available.
+    from hmac import compare_digest
+
+except ImportError:
+    def compare_digest(s1, s2):
+        differences = 0
+        for c1, c2 in izip_longest(s1, s2):
+            if c1 is None or c2 is None:
+                continue
+            differences |= ord(c1) ^ ord(c2)
+        return differences == 0
 
 def strings_equal(s1, s2):
     """
@@ -67,19 +81,4 @@ def strings_equal(s1, s2):
     """
     s1 = unicodedata.normalize('NFKC', s1)
     s2 = unicodedata.normalize('NFKC', s2)
-    try:
-        # Python 3.3+ and 2.7.7+ include a timing-attack-resistant
-        # comparison function, which is probably more reliable than ours.
-        # Use it if available.
-        from hmac import compare_digest
-
-        return compare_digest(s1, s2)
-    except ImportError:
-        pass
-
-    differences = 0
-    for c1, c2 in izip_longest(s1, s2):
-        if c1 is None or c2 is None:
-            continue
-        differences |= ord(c1) ^ ord(c2)
-    return differences == 0
+    return compare_digest(s1, s2)
