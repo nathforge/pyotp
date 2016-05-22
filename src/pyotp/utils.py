@@ -1,6 +1,10 @@
 from __future__ import print_function, unicode_literals, division, absolute_import
 
 import unicodedata
+try:
+    from itertools import izip_longest
+except ImportError:
+    from itertools import zip_longest as izip_longest
 
 try:
     from urllib.parse import quote
@@ -77,6 +81,6 @@ def strings_equal(s1, s2):
         return False
 
     differences = 0
-    for c1, c2 in zip(s1, s2):
+    for c1, c2 in izip_longest(s1, s2, '\0'):
         differences |= ord(c1) ^ ord(c2)
     return differences == 0
