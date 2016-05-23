@@ -55,6 +55,16 @@ def build_uri(secret, name, initial_count=None, issuer_name=None):
 
     return uri
 
+
+def _compare_digest(s1, s2):
+    differences = 0
+    for c1, c2 in izip_longest(s1, s2):
+        if c1 is None or c2 is None:
+            differences = 1
+            continue
+        differences |= ord(c1) ^ ord(c2)
+    return differences == 0
+
 try:
     # Python 3.3+ and 2.7.7+ include a timing-attack-resistant
     # comparison function, which is probably more reliable than ours.
@@ -62,14 +72,8 @@ try:
     from hmac import compare_digest
 
 except ImportError:
-    def compare_digest(s1, s2):
-        differences = 0
-        for c1, c2 in izip_longest(s1, s2):
-            if c1 is None or c2 is None:
-                differences = 1
-                continue
-            differences |= ord(c1) ^ ord(c2)
-        return differences == 0
+    compare_digest = _compare_digest
+
 
 def strings_equal(s1, s2):
     """
