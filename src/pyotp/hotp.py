@@ -37,4 +37,6 @@ class HOTP(OTP):
             name,
             initial_count=initial_count,
             issuer_name=issuer_name,
+            algorithm=self.digest().name,
+            digits=self.digits
         )

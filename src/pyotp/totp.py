@@ -59,7 +59,9 @@ class TOTP(OTP):
         @param [String] name of the account
         @return [String] provisioning uri
         """
-        return utils.build_uri(self.secret, name, issuer_name=issuer_name)
+        return utils.build_uri(self.secret, name, issuer_name=issuer_name,
+                               algorithm=self.digest().name,
+                               digits=self.digits, period=self.interval)
 
     def timecode(self, for_time):
         i = time.mktime(for_time.timetuple())
