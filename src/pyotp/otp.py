@@ -1,9 +1,11 @@
-from __future__ import print_function, unicode_literals, division, absolute_import
+from __future__ import (absolute_import, division,
+                        print_function, unicode_literals)
 
 import base64
 import hashlib
 import hmac
 from future.builtins import str
+
 
 class OTP(object):
     def __init__(self, s, digits=6, digest=hashlib.sha1):
@@ -62,6 +64,7 @@ class OTP(object):
         while i != 0:
             result.append(i & 0xFF)
             i >>= 8
-        # It's necessary to convert the final result from bytearray to bytes because
-        # the hmac functions in python 2.6 and 3.3 don't work with bytearray
+        # It's necessary to convert the final result from bytearray to bytes
+        # because the hmac functions in python 2.6 and 3.3 don't work with
+        # bytearray
         return bytes(bytearray(reversed(result)).rjust(padding, b'\0'))

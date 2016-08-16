@@ -1,4 +1,5 @@
-from __future__ import print_function, unicode_literals, division, absolute_import
+from __future__ import (absolute_import, division,
+                        print_function, unicode_literals)
 
 import datetime
 import time
@@ -6,6 +7,7 @@ import time
 from pyotp import utils
 from pyotp.otp import OTP
 from future.builtins import str
+
 
 class TOTP(OTP):
     def __init__(self, *args, **kwargs):
@@ -21,7 +23,8 @@ class TOTP(OTP):
         Accepts either a Unix timestamp integer or a Time object.
         Time objects will be adjusted to UTC automatically
         @param [Time/Integer] time the time to generate an OTP for
-        @param [Integer] counter_offset an amount of ticks to add to the time counter
+        @param [Integer] counter_offset an amount of ticks to add to the time
+            counter
         """
         if not isinstance(for_time, datetime.datetime):
             for_time = datetime.datetime.fromtimestamp(int(for_time))
@@ -38,7 +41,8 @@ class TOTP(OTP):
         """
         Verifies the OTP passed in against the current time OTP
         @param [String/Integer] otp the OTP to check against
-        @param [Integer] valid_window extends the validity to this many counter ticks before and after the current one
+        @param [Integer] valid_window extends the validity to this many counter
+            ticks before and after the current one
         """
         if for_time is None:
             for_time = datetime.datetime.now()

@@ -1,4 +1,5 @@
-from __future__ import print_function, unicode_literals, division, absolute_import
+from __future__ import (absolute_import, division,
+                        print_function, unicode_literals)
 
 import unicodedata
 try:
@@ -9,7 +10,8 @@ except ImportError:
 try:
     from urllib.parse import quote, urlencode
 except ImportError:
-    from urllib import quote
+    from urllib import quote, urlencode
+
 
 def build_uri(secret, name, initial_count=None, issuer_name=None,
               algorithm=None, digits=None, period=None):
@@ -22,7 +24,7 @@ def build_uri(secret, name, initial_count=None, issuer_name=None,
     For module-internal use.
 
     See also:
-        http://code.google.com/p/google-authenticator/wiki/KeyUriFormat
+        https://github.com/google/google-authenticator/wiki/Key-Uri-Format
 
     @param [String] the hotp/totp secret used to generate the URI
     @param [String] name of the account
@@ -30,6 +32,10 @@ def build_uri(secret, name, initial_count=None, issuer_name=None,
         If none, the OTP type will be assumed as TOTP.
     @param [String] the name of the OTP issuer; this will be the
         organization title of the OTP entry in Authenticator
+    @param [String] the algorithm used in the OTP generation.
+    @param [Integer] the length of the OTP generated code.
+    @param [Integer] the number of seconds the OTP generator is set to
+        expire every code.
     @return [String] provisioning uri
     """
     # initial_count may be 0 as a valid param
@@ -57,7 +63,7 @@ def build_uri(secret, name, initial_count=None, issuer_name=None,
     if is_digits_set:
         url_args['digits'] = digits
     if is_period_set:
-       url_args['period'] = period
+        url_args['period'] = period
 
     uri = base_uri.format(otp_type, label, urlencode(url_args))
     return uri

@@ -1,8 +1,10 @@
-from __future__ import print_function, unicode_literals, division, absolute_import
+from __future__ import (absolute_import, division,
+                        print_function, unicode_literals)
 
 from pyotp.otp import OTP
 from pyotp import utils
 from future.builtins import str
+
 
 class HOTP(OTP):
     def at(self, count):
