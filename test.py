@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-from __future__ import print_function, unicode_literals, division, absolute_import
+from __future__ import (absolute_import, division,
+                        print_function, unicode_literals)
 
 import base64
 import datetime
@@ -9,9 +10,14 @@ import hashlib
 import os
 import sys
 import unittest
+try:
+    from urllib.parse import urlparse, parse_qsl
+except ImportError:
+    from urlparse import urlparse, parse_qsl
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 import pyotp
+
 
 class HOTPExampleValuesFromTheRFC(unittest.TestCase):
     def test_match_rfc(self):
@@ -38,25 +44,64 @@ class HOTPExampleValuesFromTheRFC(unittest.TestCase):
     def test_provisioning_uri(self):
         hotp = pyotp.HOTP('wrn3pqx5uqxqvnqr')
 
-        self.assertEqual(
-            hotp.provisioning_uri('mark@percival'),
-            'otpauth://hotp/mark@percival?secret=wrn3pqx5uqxqvnqr&counter=0')
+        url = urlparse(
+            hotp.provisioning_uri('mark@percival'))
+        self.assertEqual(url.scheme, 'otpauth')
+        self.assertEqual(url.netloc, 'hotp')
+        self.assertEqual(url.path, '/mark%40percival')
+        self.assertEqual(dict(parse_qsl(url.query)),
+                         {'secret': 'wrn3pqx5uqxqvnqr', 'counter': '0'})
 
-        self.assertEqual(
-            hotp.provisioning_uri('mark@percival', initial_count=12),
-            'otpauth://hotp/mark@percival?secret=wrn3pqx5uqxqvnqr&counter=12')
+        url = urlparse(
+            hotp.provisioning_uri('mark@percival', initial_count=12))
+        self.assertEqual(url.scheme, 'otpauth')
+        self.assertEqual(url.netloc, 'hotp')
+        self.assertEqual(url.path, '/mark%40percival')
+        self.assertEqual(dict(parse_qsl(url.query)),
+                         {'secret': 'wrn3pqx5uqxqvnqr', 'counter': '12'})
 
-        self.assertEqual(
-            hotp.provisioning_uri('mark@percival', issuer_name='FooCorp!'),
-            'otpauth://hotp/FooCorp%21:mark@percival?secret=wrn3pqx5uqxqvnqr&counter=0&issuer=FooCorp%21')
+        url = urlparse(
+            hotp.provisioning_uri('mark@percival', issuer_name='FooCorp!'))
+        self.assertEqual(url.scheme, 'otpauth')
+        self.assertEqual(url.netloc, 'hotp')
+        self.assertEqual(url.path, '/FooCorp%21:mark%40percival')
+        self.assertEqual(dict(parse_qsl(url.query)),
+                         {'secret': 'wrn3pqx5uqxqvnqr', 'counter': '0',
+                          'issuer': 'FooCorp!'})
+
+        key = 'c7uxuqhgflpw7oruedmglbrk7u6242vb'
+        hotp = pyotp.HOTP(key, digits=8, digest=hashlib.sha256)
+        url = urlparse(
+            hotp.provisioning_uri('baco@peperina', issuer_name='FooCorp'))
+        self.assertEqual(url.scheme, 'otpauth')
+        self.assertEqual(url.netloc, 'hotp')
+        self.assertEqual(url.path, '/FooCorp:baco%40peperina')
+        self.assertEqual(dict(parse_qsl(url.query)),
+                         {'secret': 'c7uxuqhgflpw7oruedmglbrk7u6242vb',
+                          'counter': '0', 'issuer': 'FooCorp',
+                          'digits': '8', 'algorithm': 'SHA256'})
+
+        hotp = pyotp.HOTP(key, digits=8)
+        url = urlparse(
+            hotp.provisioning_uri('baco@peperina', issuer_name='FooCorp',
+                                  initial_count=10))
+        self.assertEqual(url.scheme, 'otpauth')
+        self.assertEqual(url.netloc, 'hotp')
+        self.assertEqual(url.path, '/FooCorp:baco%40peperina')
+        self.assertEqual(dict(parse_qsl(url.query)),
+                         {'secret': 'c7uxuqhgflpw7oruedmglbrk7u6242vb',
+                          'counter': '10', 'issuer': 'FooCorp',
+                          'digits': '8'})
 
     def test_other_secret(self):
-        hotp = pyotp.HOTP('N3OVNIBRERIO5OHGVCMDGS4V4RJ3AUZOUN34J6FRM4P6JIFCG3ZA')
+        hotp = pyotp.HOTP(
+            'N3OVNIBRERIO5OHGVCMDGS4V4RJ3AUZOUN34J6FRM4P6JIFCG3ZA')
         self.assertEqual(hotp.at(0), '737863')
         self.assertEqual(hotp.at(1), '390601')
         self.assertEqual(hotp.at(2), '363354')
         self.assertEqual(hotp.at(3), '936780')
         self.assertEqual(hotp.at(4), '654019')
+
 
 class TOTPExampleValuesFromTheRFC(unittest.TestCase):
     RFC_VALUES = {
@@ -78,7 +123,9 @@ class TOTPExampleValuesFromTheRFC(unittest.TestCase):
             (20000000000, '77737706'),
         ),
 
-        (hashlib.sha512, b'1234567890123456789012345678901234567890123456789012345678901234'): (
+        (hashlib.sha512,
+         b'1234567890123456789012345678901234567890123456789012345678901234'):
+        (
             (59, 90693936),
             (1111111109, '25091201'),
             (1111111111, '99943326'),
@@ -125,13 +172,57 @@ class TOTPExampleValuesFromTheRFC(unittest.TestCase):
 
     def test_provisioning_uri(self):
         totp = pyotp.TOTP('wrn3pqx5uqxqvnqr')
-        self.assertEqual(
-            totp.provisioning_uri('mark@percival'),
-            'otpauth://totp/mark@percival?secret=wrn3pqx5uqxqvnqr')
+        url = urlparse(
+            totp.provisioning_uri('mark@percival'))
+        self.assertEqual(url.scheme, 'otpauth')
+        self.assertEqual(url.netloc, 'totp')
+        self.assertEqual(url.path, '/mark%40percival')
+        self.assertEqual(dict(parse_qsl(url.query)),
+                         {'secret': 'wrn3pqx5uqxqvnqr'})
 
-        self.assertEqual(
-            totp.provisioning_uri('mark@percival', issuer_name='FooCorp!'),
-            'otpauth://totp/FooCorp%21:mark@percival?secret=wrn3pqx5uqxqvnqr&issuer=FooCorp%21')
+        url = urlparse(
+            totp.provisioning_uri('mark@percival', issuer_name='FooCorp!'))
+        self.assertEqual(url.scheme, 'otpauth')
+        self.assertEqual(url.netloc, 'totp')
+        self.assertEqual(url.path, '/FooCorp%21:mark%40percival')
+        self.assertEqual(dict(parse_qsl(url.query)),
+                         {'secret': 'wrn3pqx5uqxqvnqr',
+                          'issuer': 'FooCorp!'})
+
+        key = 'c7uxuqhgflpw7oruedmglbrk7u6242vb'
+        totp = pyotp.TOTP(key, digits=8, interval=60, digest=hashlib.sha256)
+        url = urlparse(
+                totp.provisioning_uri('baco@peperina', issuer_name='FooCorp'))
+        self.assertEqual(url.scheme, 'otpauth')
+        self.assertEqual(url.netloc, 'totp')
+        self.assertEqual(url.path, '/FooCorp:baco%40peperina')
+        self.assertEqual(dict(parse_qsl(url.query)),
+                         {'secret': 'c7uxuqhgflpw7oruedmglbrk7u6242vb',
+                          'issuer': 'FooCorp',
+                          'digits': '8', 'period': '60',
+                          'algorithm': 'SHA256'})
+
+        totp = pyotp.TOTP(key, digits=8, interval=60)
+        url = urlparse(
+                totp.provisioning_uri('baco@peperina', issuer_name='FooCorp'))
+        self.assertEqual(url.scheme, 'otpauth')
+        self.assertEqual(url.netloc, 'totp')
+        self.assertEqual(url.path, '/FooCorp:baco%40peperina')
+        self.assertEqual(dict(parse_qsl(url.query)),
+                         {'secret': 'c7uxuqhgflpw7oruedmglbrk7u6242vb',
+                          'issuer': 'FooCorp',
+                          'digits': '8', 'period': '60'})
+
+        totp = pyotp.TOTP(key, digits=8)
+        url = urlparse(
+                totp.provisioning_uri('baco@peperina', issuer_name='FooCorp'))
+        self.assertEqual(url.scheme, 'otpauth')
+        self.assertEqual(url.netloc, 'totp')
+        self.assertEqual(url.path, '/FooCorp:baco%40peperina')
+        self.assertEqual(dict(parse_qsl(url.query)),
+                         {'secret': 'c7uxuqhgflpw7oruedmglbrk7u6242vb',
+                          'issuer': 'FooCorp',
+                          'digits': '8'})
 
     def test_random_key_generation(self):
         self.assertEqual(len(pyotp.random_base32()), 16)
@@ -168,6 +259,7 @@ class CounterOffsetTest(unittest.TestCase):
         self.assertEqual(totp.at(200), "028307")
         self.assertTrue(totp.at(200, 1), "681610")
 
+
 class ValidWindowTest(unittest.TestCase):
     def test_valid_window(self):
         totp = pyotp.TOTP("ABCDEFGH")
@@ -175,6 +267,7 @@ class ValidWindowTest(unittest.TestCase):
         self.assertTrue(totp.verify("028307", 200, 1))
         self.assertTrue(totp.verify("681610", 200, 1))
         self.assertFalse(totp.verify("195979", 200, 1))
+
 
 class Timecop(object):
     """
