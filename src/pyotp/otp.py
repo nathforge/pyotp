@@ -27,6 +27,8 @@ class OTP(object):
         Usually either the counter, or the computed integer
         based on the Unix timestamp
         """
+        if input < 0:
+            raise ValueError('input must be positive integer')
         hasher = hmac.new(self.byte_secret(), self.int_to_bytestring(input), self.digest)
         hmac_hash = bytearray(hasher.digest())
         offset = hmac_hash[-1] & 0xf
