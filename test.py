@@ -30,6 +30,10 @@ class HOTPExampleValuesFromTheRFC(unittest.TestCase):
         self.assertEqual(hotp.at(8), '399871')
         self.assertEqual(hotp.at(9), '520489')
 
+    def test_invalid_input(self):
+        hotp = pyotp.HOTP('GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ')
+        self.assertRaises(ValueError, hotp.at(-1))
+
     def test_verify_otp_reuse(self):
         hotp = pyotp.HOTP('GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ')
         self.assertTrue(hotp.verify('520489', 9))
@@ -161,6 +165,10 @@ class TOTPExampleValuesFromTheRFC(unittest.TestCase):
             self.assertTrue(totp.verify('102705'))
         with Timecop(1297553958 + 30):
             self.assertFalse(totp.verify('102705'))
+
+    def test_invalid_input(self):
+        totp = pyotp.TOTP('GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ')
+        self.assertRaises(ValueError, totp.at(-1))
 
     def test_validate_totp_with_digit_length(self):
         totp = pyotp.TOTP('GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ')
