@@ -1,7 +1,7 @@
 from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
 
-import random as _random
+import secrets as _random
 
 from pyotp.hotp import HOTP  # noqa
 from pyotp.otp import OTP  # noqa
