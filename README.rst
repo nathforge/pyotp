@@ -43,6 +43,14 @@ Time-based OTPs
     time.sleep(30)
     totp.verify(492039) # => False
 
+    # OTP generate password for 10 digits TOTP using the SHA512
+    # Google Authenticate only supports 6 currently
+    # See OTP class for more information of how to implement it
+    # The OTP class provide options for the HMAC digest and 
+    # number of digits of the OTP
+    # Google Authenticate only supports 'sha1' currently
+    totp = pyotp.TOTP('base32secret3232',10,hashlib.sha512)
+
 Counter-based OTPs
 ~~~~~~~~~~~~~~~~~~
 ::
