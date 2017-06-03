@@ -82,7 +82,7 @@ def _compare_digest(s1, s2):
         if c1 is None or c2 is None:
             differences = 1
             continue
-        differences |= ord(c1) ^ ord(c2)
+        differences = ord(c1) ^ ord(c2) | differences
     return differences == 0
 
 try:
