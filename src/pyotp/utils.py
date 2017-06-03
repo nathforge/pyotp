@@ -72,10 +72,7 @@ def build_uri(secret, name, initial_count=None, issuer_name=None,
     if is_period_set:
         url_args['period'] = period
 
-    try:
-        uri = base_uri.format(otp_type, label, urlencode(url_args, quote_via=quote))
-    except TypeError:
-        uri = base_uri.format(otp_type, label, urlencode(url_args).replace("+", "%20"))
+    uri = base_uri.format(otp_type, label, urlencode(url_args).replace("+", "%20"))
     return uri
 
 
