@@ -60,7 +60,7 @@ class TOTP(OTP):
             for_time = datetime.datetime.now()
 
         if valid_window:
-            for i in range(-valid_window, valid_window + 1):
+            for i in range(-valid_window, valid_window + 2):
                 if utils.strings_equal(str(otp), str(self.at(for_time, i))):
                     return True
             return False
