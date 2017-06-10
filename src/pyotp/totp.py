@@ -43,6 +43,33 @@ class TOTP(OTP):
         """
         return self.generate_otp(self.timecode(datetime.datetime.now()))
 
+    def former(self):
+        """
+        Generate the former time OTP
+        @return [Integer] the OTP as an integer
+        """
+        return self.generate_otp(self.timecode(datetime.datetime.now()-datetime.timedelta(seconds=30)))
+
+    def verify_former(self, otp, for_time=None, valid_window=0):
+        """
+        Verifies the OTP passed in against the current and former time OTP
+        @return [Integer] the OTP as an integer
+        """
+        if for_time is None:
+            for_time = datetime.datetime.now()
+        for_time_former = (for_time - datetime.timedelta(seconds=30))
+        for_time_former = time.mktime(for_time_former.timetuple())
+
+        if valid_window:
+            for i in range(-valid_window, valid_window + 1):
+                if utils.strings_equal(str(otp), str(self.at(for_time, i))) or \
+                        utils.strings_equal(str(otp), str(self.at(for_time_former, i))):
+                    return True
+            return False
+
+        return utils.strings_equal(str(otp), str(self.at(for_time))) or \
+               utils.strings_equal(str(otp), str(self.at(for_time_former)))
+
     def verify(self, otp, for_time=None, valid_window=0):
         """
         Verifies the OTP passed in against the current time OTP.

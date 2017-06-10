@@ -159,6 +159,20 @@ class TOTPExampleValuesFromTheRFC(unittest.TestCase):
         with Timecop(1297553958):
             self.assertEqual(totp.now(), '102705')
 
+    def test_match_google_authenticator_output_former(self):
+        totp = pyotp.TOTP('wrn3pqx5uqxqvnqr')
+        with Timecop(1460562459):
+            self.assertEqual(totp.now(), '584437')
+            self.assertEqual(totp.former(), '426626')
+
+    def test_validate_totp_former(self):
+        totp = pyotp.TOTP('wrn3pqx5uqxqvnqr')
+        with Timecop(1460562459):
+            self.assertTrue(totp.verify_former('584437'))
+            self.assertTrue(totp.verify_former('426626'))
+        with Timecop(1460562459 + 30):
+            self.assertFalse(totp.verify('584437'))
+
     def test_validate_totp(self):
         totp = pyotp.TOTP('wrn3pqx5uqxqvnqr')
         with Timecop(1297553958):
