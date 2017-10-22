@@ -20,6 +20,8 @@ class OTP(object):
         """
         self.digits = digits
         self.digest = digest
+        if type(s) == str: # Avoids ERROR: test_match_rfc (__main__.TOTPExampleValuesFromTheRFC) AttributeError: 'int' object has no attribute 'upper'
+            s = ''.join(c for c in s if c.upper() in "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=")
         self.secret = s
 
     def generate_otp(self, input):
