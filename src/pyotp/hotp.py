@@ -21,7 +21,7 @@ class HOTP(OTP):
 
     def verify(self, otp, counter):
         """
-        Verifies the OTP passed in against the current time OTP.
+        Verifies the OTP passed in against the current counter OTP.
 
         :param otp: the OTP to check against
         :type otp: str
