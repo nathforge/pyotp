@@ -6,7 +6,6 @@ from pyotp.otp import OTP  # noqa
 from pyotp.totp import TOTP  # noqa
 from . import utils  # noqa
 
-
 def random_base32(length=16, random=None,
                   chars=list('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567')):
 
