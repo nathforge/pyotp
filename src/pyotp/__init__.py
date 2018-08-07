@@ -13,11 +13,10 @@ def random_base32(length=16, random=None,
     # Use secrets module if available (Python version >= 3.6) per PEP 506
     try:
         import secrets
+        random = secrets.SystemRandom()
     except ImportError:
         import random as _random
         random = _random.SystemRandom()
-    else:
-        random = secrets.SystemRandom()
 
     return ''.join(
         random.choice(chars)
