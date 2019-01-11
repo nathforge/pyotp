@@ -127,6 +127,7 @@ Links
 * `NIST SP 800-63-3: Digital Authentication Guideline <https://pages.nist.gov/800-63-3/>`_
 
 For new applications:
+
 * `WebAuthn <https://www.w3.org/TR/webauthn/>`_
 * `PyWARP <https://github.com/pyauth/pywarp>`_
 
