@@ -31,7 +31,7 @@ class TOTP(OTP):
         :rtype: str
         """
         if not isinstance(for_time, datetime.datetime):
-            for_time = datetime.datetime.fromtimestamp(int(for_time))
+            for_time = datetime.datetime.utcfromtimestamp(int(for_time)).replace(tzinfo=datetime.timezone.utc)
         return self.generate_otp(self.timecode(for_time) + counter_offset)
 
     def now(self):
@@ -89,4 +89,7 @@ class TOTP(OTP):
 
     def timecode(self, for_time):
         i = time.mktime(for_time.timetuple())
-        return int(i / self.interval)
+        offset = datetime.datetime.utcfromtimestamp(i) - datetime.datetime.fromtimestamp(i)
+        real_for_time = for_time - offset
+        real_i = time.mktime(real_for_time.timetuple())
+        return int(real_i / self.interval)

@@ -16,7 +16,7 @@ import pyotp  # noqa
 
 class HOTPExampleValuesFromTheRFC(unittest.TestCase):
     def test_match_rfc(self):
-        # 12345678901234567890 in Bas32
+        # 12345678901234567890 in Base32
         # GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ
         hotp = pyotp.HOTP('GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ')
         self.assertEqual(hotp.at(0), '755224')
@@ -297,7 +297,7 @@ class Timecop(object):
         class FrozenDateTime(datetime.datetime):
             @classmethod
             def now(cls, **kwargs):
-                return cls.fromtimestamp(timecop.freeze_timestamp)
+                return cls.utcfromtimestamp(timecop.freeze_timestamp).replace(tzinfo=datetime.timezone.utc)
 
         timecop = self
         return FrozenDateTime
