@@ -261,6 +261,9 @@ class StringComparisonTest(CompareDigestTest):
     def test_fullwidth_input(self):
         self.assertTrue(self.method("ｘs１２３45", "xs12345"))
 
+    def test_unicode_equal(self):
+        self.assertTrue(self.method("ěšč45", "ěšč45"))
+
 
 class CounterOffsetTest(unittest.TestCase):
     def test_counter_offset(self):
