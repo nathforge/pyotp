@@ -22,6 +22,6 @@ def random_base32(length=16, random=None,
         for _ in range(length)
     )
 
-def random_hex(length=16, random=None, 
+def random_hex(length=16, random=None,
                chars=list('ABCDEF0123456789')):
     return random_base32(length=length, random=None, chars=chars)
