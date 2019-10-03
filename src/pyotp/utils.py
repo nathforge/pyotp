@@ -12,7 +12,7 @@ except ImportError:
     from urllib import quote, urlencode
 
 
-def build_uri(secret, name, initial_count=None, issuer_name=None,
+def build_uri(secret, name, initial_count=None, issuer=None,
               algorithm=None, digits=None, period=None):
     """
     Returns the provisioning URI for the OTP; works for either TOTP or HOTP.
@@ -32,9 +32,9 @@ def build_uri(secret, name, initial_count=None, issuer_name=None,
     :param initial_count: starting counter value, defaults to None.
         If none, the OTP type will be assumed as TOTP.
     :type initial_count: int
-    :param issuer_name: the name of the OTP issuer; this will be the
+    :param issuer: the name of the OTP issuer; this will be the
         organization title of the OTP entry in Authenticator
-    :type issuer_name: str
+    :type issuer: str
     :param algorithm: the algorithm used in the OTP generation.
     :type algorithm: str
     :param digits: the length of the OTP generated code.
@@ -59,9 +59,9 @@ def build_uri(secret, name, initial_count=None, issuer_name=None,
     url_args = {'secret': secret}
 
     label = quote(name)
-    if issuer_name is not None:
-        label = quote(issuer_name) + ':' + label
-        url_args['issuer'] = issuer_name
+    if issuer is not None:
+        label = quote(issuer) + ':' + label
+        url_args['issuer'] = issuer
 
     if is_initial_count_present:
         url_args['counter'] = initial_count

@@ -8,6 +8,14 @@ class HOTP(OTP):
     """
     Handler for HMAC-based OTP counters.
     """
+    def __init__(self, *args, **kwargs):
+        """
+        :param initial_count: starting HMAC counter value, defaults to 0
+        :type initial_count: int
+        """
+        self.initial_count = kwargs.pop('initial_count', 0)
+        super(HOTP, self).__init__(*args, **kwargs)
+
     def at(self, count):
         """
         Generates the OTP for the given count.
@@ -30,7 +38,7 @@ class HOTP(OTP):
         """
         return utils.strings_equal(str(otp), str(self.at(counter)))
 
-    def provisioning_uri(self, name, initial_count=0, issuer_name=None):
+    def provisioning_uri(self):
         """
         Returns the provisioning URI for the OTP.  This can then be
         encoded in a QR Code and used to provision an OTP app like
@@ -39,20 +47,14 @@ class HOTP(OTP):
         See also:
             https://github.com/google/google-authenticator/wiki/Key-Uri-Format
 
-        :param name: name of the user account
-        :type name: str
-        :param initial_count: starting HMAC counter value, defaults to 0
-        :type initial_count: int
-        :param issuer_name: the name of the OTP issuer; this will be the
-            organization title of the OTP entry in Authenticator
         :returns: provisioning URI
         :rtype: str
         """
         return utils.build_uri(
             self.secret,
-            name,
-            initial_count=initial_count,
-            issuer_name=issuer_name,
+            name=self.name,
+            initial_count=self.initial_count,
+            issuer=self.issuer,
             algorithm=self.digest().name,
             digits=self.digits
         )

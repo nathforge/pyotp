@@ -88,16 +88,26 @@ Google Authenticator Compatible
 PyOTP works with the Google Authenticator iPhone and Android app, as well as other OTP apps like Authy. PyOTP includes the
 ability to generate provisioning URIs for use with the QR Code scanner built into these MFA client apps::
 
-    pyotp.totp.TOTP('JBSWY3DPEHPK3PXP').provisioning_uri("alice@google.com", issuer_name="Secure App")
+    pyotp.totp.TOTP('JBSWY3DPEHPK3PXP', name="alice@google.com", issuer="Secure App").provisioning_uri()
 
     >>> 'otpauth://totp/Secure%20App:alice%40google.com?secret=JBSWY3DPEHPK3PXP&issuer=Secure%20App'
 
-    pyotp.hotp.HOTP('JBSWY3DPEHPK3PXP').provisioning_uri("alice@google.com", initial_count=0, issuer_name="Secure App")
+    pyotp.hotp.HOTP('JBSWY3DPEHPK3PXP', name="alice@google.com", issuer="Secure App", initial_count=0).provisioning_uri()
 
     >>> 'otpauth://hotp/Secure%20App:alice%40google.com?secret=JBSWY3DPEHPK3PXP&issuer=Secure%20App&counter=0'
 
 This URL can then be rendered as a QR Code (for example, using https://github.com/neocotic/qrious) which can then be scanned
 and added to the users list of OTP credentials.
+
+Parsing these URLs is also supported::
+
+    pyotp.parse_uri('otpauth://totp/Secure%20App:alice%40google.com?secret=JBSWY3DPEHPK3PXP&issuer=Secure%20App')
+
+    >>> <pyotp.totp.TOTP object at 0xFFFFFFFF>
+
+    pyotp.parse_uri('otpauth://hotp/Secure%20App:alice%40google.com?secret=JBSWY3DPEHPK3PXP&issuer=Secure%20App&counter=0'
+
+    >>> <pyotp.totp.HOTP object at 0xFFFFFFFF>
 
 Working example
 ~~~~~~~~~~~~~~~

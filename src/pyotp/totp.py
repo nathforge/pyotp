@@ -67,7 +67,7 @@ class TOTP(OTP):
 
         return utils.strings_equal(str(otp), str(self.at(for_time)))
 
-    def provisioning_uri(self, name, issuer_name=None):
+    def provisioning_uri(self):
         """
         Returns the provisioning URI for the OTP.  This can then be
         encoded in a QR Code and used to provision an OTP app like
@@ -76,14 +76,9 @@ class TOTP(OTP):
         See also:
             https://github.com/google/google-authenticator/wiki/Key-Uri-Format
 
-        :param name: name of the user account
-        :type name: str
-        :param issuer_name: the name of the OTP issuer; this will be the
-            organization title of the OTP entry in Authenticator
-        :returns: provisioning URI
         :rtype: str
         """
-        return utils.build_uri(self.secret, name, issuer_name=issuer_name,
+        return utils.build_uri(self.secret, self.name, issuer=self.issuer,
                                algorithm=self.digest().name,
                                digits=self.digits, period=self.interval)
 

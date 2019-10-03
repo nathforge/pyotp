@@ -9,7 +9,7 @@ class OTP(object):
     """
     Base class for OTP handlers.
     """
-    def __init__(self, s, digits=6, digest=hashlib.sha1):
+    def __init__(self, s, digits=6, digest=hashlib.sha1, name=None, issuer=None):
         """
         :param s: secret in base32 format
         :type s: str
@@ -17,10 +17,22 @@ class OTP(object):
         :type digits: int
         :param digest: digest function to use in the HMAC (expected to be sha1)
         :type digest: callable
+        :param name: account name
+        :type digits: str
+        :param issuer: issuer
+        :type digits: str
         """
         self.digits = digits
         self.digest = digest
         self.secret = s
+        if not name and not issuer:
+            self.name = "Secret"
+            self.issuer = "PyOTP"
+        elif not name:
+            self.name = "Secret"
+        else:
+            self.name = name
+        self.issuer = issuer
 
     def generate_otp(self, input):
         """
