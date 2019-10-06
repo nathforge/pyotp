@@ -69,7 +69,7 @@ def parse_uri(uri):
         if key == 'secret':
             secret = value
         elif key == 'issuer':
-            if otp_data['issuer'] is not None and otp_data['issuer'] != value:
+            if 'issuer' in otp_data and otp_data['issuer'] is not None and otp_data['issuer'] != value:
                 raise ValueError('If issuer is specified in both label and parameters, it should be equal.')
             otp_data['issuer'] = value
         elif key == 'algorithm':
