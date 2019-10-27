@@ -14,6 +14,7 @@ except ImportError:
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 import pyotp  # noqa
 
+
 class HOTPExampleValuesFromTheRFC(unittest.TestCase):
     def test_match_rfc(self):
         # 12345678901234567890 in Bas32
@@ -297,6 +298,12 @@ class TOTPExampleValuesFromTheRFC(unittest.TestCase):
     def test_random_key_generation(self):
         self.assertEqual(len(pyotp.random_base32()), 16)
         self.assertEqual(len(pyotp.random_base32(length=20)), 20)
+        self.assertEqual(len(pyotp.random_hex()), 32)
+        self.assertEqual(len(pyotp.random_hex(length=64)), 64)
+        with self.assertRaises(Exception):
+            pyotp.random_base32(length=15)
+        with self.assertRaises(Exception):
+            pyotp.random_hex(length=24)
 
 
 class CompareDigestTest(unittest.TestCase):
@@ -365,6 +372,7 @@ class Timecop(object):
 
         timecop = self
         return FrozenDateTime
+
 
 if __name__ == '__main__':
     unittest.main()

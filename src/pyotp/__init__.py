@@ -10,9 +10,11 @@ from pyotp.otp import OTP  # noqa
 from pyotp.totp import TOTP  # noqa
 from . import utils  # noqa
 
+
 def random_base32(length=16, random=None,
                   chars=list('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567')):
-
+    if length < 16:
+        raise Exception("Secrets should be at least 128 bits")
     # Use secrets module if available (Python version >= 3.6) per PEP 506
     try:
         import secrets
@@ -25,6 +27,12 @@ def random_base32(length=16, random=None,
         random.choice(chars)
         for _ in range(length)
     )
+
+def random_hex(length=32, random=None,
+               chars=list('ABCDEF0123456789')):
+    if length < 32:
+        raise Exception("Secrets should be at least 128 bits")
+    return random_base32(length=length, random=None, chars=chars)
 
 def parse_uri(uri):
     """

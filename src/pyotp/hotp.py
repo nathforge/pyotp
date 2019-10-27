@@ -4,6 +4,7 @@ from . import utils
 from .otp import OTP
 from .compat import str
 
+
 class HOTP(OTP):
     """
     Handler for HMAC-based OTP counters.

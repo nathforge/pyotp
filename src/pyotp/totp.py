@@ -7,6 +7,7 @@ from . import utils
 from .otp import OTP
 from .compat import str
 
+
 class TOTP(OTP):
     """
     Handler for time-based OTP counters.

@@ -76,11 +76,15 @@ Counter-based OTPs
     hotp.verify('316439', 1401) # => True
     hotp.verify('316439', 1402) # => False
 
-Generating a base32 Secret Key
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-::
+Generating a Secret Key
+~~~~~~~~~~~~~~~~~~~~~~~
+A helper function is provided to generate a 16 character base32 secret, compatible with Google Authenticator and other OTP apps::
 
-    pyotp.random_base32() # returns a 16 character base32 secret. Compatible with Google Authenticator and other OTP apps
+    pyotp.random_base32()
+
+Some applications want the secret key to be formatted as a hex-encoded string::
+
+    pyotp.random_hex()  # returns a 32-character hex-encoded secret
 
 Google Authenticator Compatible
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -125,10 +129,10 @@ Now run the following and compare the output::
 Links
 ~~~~~
 
-* `Project home page (GitHub) <https://github.com/pyotp/pyotp>`_
+* `Project home page (GitHub) <https://github.com/pyauth/pyotp>`_
 * `Documentation (Read the Docs) <https://pyotp.readthedocs.io/en/latest/>`_
 * `Package distribution (PyPI) <https://pypi.python.org/pypi/pyotp>`_
-* `Change log <https://github.com/pyotp/pyotp/blob/master/Changes.rst>`_
+* `Change log <https://github.com/pyauth/pyotp/blob/master/Changes.rst>`_
 * `RFC 4226: HOTP: An HMAC-Based One-Time Password <https://tools.ietf.org/html/rfc4226>`_
 * `RFC 6238: TOTP: Time-Based One-Time Password Algorithm <https://tools.ietf.org/html/rfc6238>`_
 * `ROTP <https://github.com/mdp/rotp>`_ - Original Ruby OTP library by `Mark Percival <https://github.com/mdp>`_
@@ -141,10 +145,10 @@ For new applications:
 * `WebAuthn <https://www.w3.org/TR/webauthn/>`_
 * `PyWARP <https://github.com/pyauth/pywarp>`_
 
-.. image:: https://img.shields.io/travis/pyotp/pyotp.svg
-        :target: https://travis-ci.org/pyotp/pyotp
-.. image:: https://img.shields.io/codecov/c/github/pyotp/pyotp/master.svg
-        :target: https://codecov.io/github/pyotp/pyotp?branch=master
+.. image:: https://github.com/pyauth/pyotp/workflows/Python%20package/badge.svg
+        :target: https://github.com/pyauth/pyotp/actions
+.. image:: https://img.shields.io/codecov/c/github/pyauth/pyotp/master.svg
+        :target: https://codecov.io/github/pyauth/pyotp?branch=master
 .. image:: https://img.shields.io/pypi/v/pyotp.svg
         :target: https://pypi.python.org/pypi/pyotp
 .. image:: https://img.shields.io/pypi/l/pyotp.svg

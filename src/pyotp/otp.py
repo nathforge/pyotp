@@ -5,6 +5,7 @@ import hashlib
 import hmac
 from .compat import str
 
+
 class OTP(object):
     """
     Base class for OTP handlers.
