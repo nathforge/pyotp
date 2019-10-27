@@ -67,7 +67,7 @@ class TOTP(OTP):
 
         return utils.strings_equal(str(otp), str(self.at(for_time)))
 
-    def provisioning_uri(self):
+    def provisioning_uri(self, name=None, issuer_name=None):
         """
         Returns the provisioning URI for the OTP.  This can then be
         encoded in a QR Code and used to provision an OTP app like
@@ -78,7 +78,8 @@ class TOTP(OTP):
 
         :rtype: str
         """
-        return utils.build_uri(self.secret, self.name, issuer=self.issuer,
+        return utils.build_uri(self.secret, name if name else self.name,
+                               issuer=issuer_name if issuer_name else self.issuer,
                                algorithm=self.digest().name,
                                digits=self.digits, period=self.interval)
 

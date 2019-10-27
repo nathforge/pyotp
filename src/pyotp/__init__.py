@@ -1,11 +1,6 @@
 from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
 
-try:
-    from urllib.parse import unquote, urlparse, parse_qsl
-except ImportError:
-    from urlparse import unquote, urlparse, parse_qsl
-
 import hashlib
 
 from re import split
@@ -56,7 +51,7 @@ def parse_uri(uri):
     if parsed_uri.scheme != 'otpauth':
         raise ValueError('Not an otpauth URI')
 
-    # Parse issues/accountname info
+    # Parse issuer/accountname info
     accountinfo_parts = split(':|%3A', parsed_uri.path[1:], maxsplit=1)
     if len(accountinfo_parts) == 1:
         otp_data['name'] = accountinfo_parts[0]
