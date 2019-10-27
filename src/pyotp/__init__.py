@@ -8,6 +8,7 @@ from re import split
 from pyotp.hotp import HOTP  # noqa
 from pyotp.otp import OTP  # noqa
 from pyotp.totp import TOTP  # noqa
+from pyotp.compat import unquote, urlparse, parse_qsl  # noqa
 from . import utils  # noqa
 
 
