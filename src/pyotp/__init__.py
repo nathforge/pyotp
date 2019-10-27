@@ -29,11 +29,13 @@ def random_base32(length=16, random=None,
         for _ in range(length)
     )
 
+
 def random_hex(length=32, random=None,
                chars=list('ABCDEF0123456789')):
     if length < 32:
         raise Exception("Secrets should be at least 128 bits")
     return random_base32(length=length, random=None, chars=chars)
+
 
 def parse_uri(uri):
     """
