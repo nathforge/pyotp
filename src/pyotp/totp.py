@@ -26,7 +26,7 @@ class TOTP(OTP):
         Accepts either a Unix timestamp integer or a datetime object.
 
         :param for_time: the time to generate an OTP for
-        :type for_time: int or datetime
+        :type for_time: int or datetime.datetime
         :param counter_offset: the amount of ticks to add to the time counter
         :returns: OTP value
         :rtype: str
@@ -51,7 +51,7 @@ class TOTP(OTP):
         :param otp: the OTP to check against
         :type otp: str
         :param for_time: Time to check OTP at (defaults to now)
-        :type for_time: int or datetime
+        :type for_time: int or datetime.datetime
         :param valid_window: extends the validity to this many counter ticks before and after the current one
         :type valid_window: int
         :returns: True if verification succeeded, False otherwise
