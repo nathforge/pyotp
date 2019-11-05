@@ -34,8 +34,8 @@ class HOTP(OTP):
 
         :param otp: the OTP to check against
         :type otp: str
-        :param count: the OTP HMAC counter
-        :type count: int
+        :param counter: the OTP HMAC counter
+        :type counter: int
         """
         return utils.strings_equal(str(otp), str(self.at(counter)))
 
