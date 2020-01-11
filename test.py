@@ -1,18 +1,13 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-from __future__ import absolute_import, division, print_function, unicode_literals
-
 import base64, datetime, hashlib, os, sys, unittest
 from warnings import warn
 
-try:
-    from urllib.parse import urlparse, parse_qsl
-except ImportError:
-    from urlparse import urlparse, parse_qsl
+from urllib.parse import urlparse, parse_qsl
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
-import pyotp  # noqa
+import pyotp
 
 
 class HOTPExampleValuesFromTheRFC(unittest.TestCase):
@@ -319,10 +314,6 @@ class CompareDigestTest(unittest.TestCase):
         self.assertFalse(self.method("a" * 999 + "b", "a" * 1000))
 
 
-class FallBackCompareDigestTest(CompareDigestTest):
-    method = staticmethod(pyotp.utils._compare_digest)
-
-
 class StringComparisonTest(CompareDigestTest):
     method = staticmethod(pyotp.utils.strings_equal)
 
@@ -348,6 +339,45 @@ class ValidWindowTest(unittest.TestCase):
         self.assertTrue(totp.verify("681610", 200, 1))
         self.assertFalse(totp.verify("195979", 200, 1))
 
+class ParseUriTest(unittest.TestCase):
+    def test_invalids(self):
+        with self.assertRaises(ValueError) as cm:
+            pyotp.parse_uri('http://hello.com')
+        self.assertEqual('Not an otpauth URI', str(cm.exception))
+
+        with self.assertRaises(ValueError) as cm:
+            pyotp.parse_uri('otpauth://totp')
+        self.assertEqual('No secret found in URI', str(cm.exception))
+
+        with self.assertRaises(ValueError) as cm:
+            pyotp.parse_uri('otpauth://derp?secret=foo')
+        self.assertEqual('Not a supported OTP type', str(cm.exception))
+
+        with self.assertRaises(ValueError) as cm:
+            pyotp.parse_uri('otpauth://totp?foo=secret')
+        self.assertEqual('foo is not a valid parameter', str(cm.exception))
+
+        with self.assertRaises(ValueError) as cm:
+            pyotp.parse_uri('otpauth://totp?digits=-1')
+        self.assertEqual('Digits may only be 6 or 8', str(cm.exception))
+
+        with self.assertRaises(ValueError) as cm:
+            pyotp.parse_uri('otpauth://totp/SomeIssuer:?issuer=AnotherIssuer')
+        self.assertEqual('If issuer is specified in both label and parameters, it should be equal.', str(cm.exception))
+
+        with self.assertRaises(ValueError) as cm:
+            pyotp.parse_uri('otpauth://totp?algorithm=aes')
+        self.assertEqual('Invalid value for algorithm, must be SHA1, SHA256 or SHA512', str(cm.exception))
+
+    def test_algorithms(self):
+        otp = pyotp.parse_uri('otpauth://totp?algorithm=SHA1&secret=123456&algorithm=SHA1')
+        self.assertEqual(hashlib.sha1, otp.digest)
+
+        otp = pyotp.parse_uri('otpauth://totp?algorithm=SHA1&secret=123456&algorithm=SHA256')
+        self.assertEqual(hashlib.sha256, otp.digest)
+
+        otp = pyotp.parse_uri('otpauth://totp?algorithm=SHA1&secret=123456&algorithm=SHA512')
+        self.assertEqual(hashlib.sha512, otp.digest)
 
 class Timecop(object):
     """

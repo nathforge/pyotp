@@ -31,5 +31,12 @@ npm-debug.log
 # OS X metadata files
 .DS_Store
 
-# Python coverage 
+# Python coverage
 .coverage
+htmlcov
+
+# Virtual environments
+venv
+
+# Type checking
+.mypy_cache

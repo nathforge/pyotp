@@ -3,19 +3,22 @@ SHELL=/bin/bash -e
 wheel: lint clean
 	./setup.py bdist_wheel
 
-test_deps:
-	pip install coverage flake8
+test_deps: requirements-dev.txt
+	pip install -r requirements-dev.txt
 
 lint: test_deps
 	python setup.py flake8
 
-test: test_deps lint
-	coverage run setup.py test
+typecheck: test_deps
+	mypy --strict src
 
-init_docs:
+test: lint typecheck
+	coverage run --branch --include 'src/*' setup.py test
+
+init_docs: test_deps
 	cd docs; sphinx-quickstart
 
-docs:
+docs: test_deps
 	$(MAKE) -C docs html
 
 install: clean

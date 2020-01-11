@@ -1,28 +1,21 @@
-from __future__ import (absolute_import, division,
-                        print_function, unicode_literals)
+from typing import Any, Dict, Sequence
 
 import hashlib
-
+import secrets
 from re import split
+from urllib.parse import unquote, urlparse, parse_qsl
 
-from pyotp.hotp import HOTP  # noqa
-from pyotp.otp import OTP  # noqa
-from pyotp.totp import TOTP  # noqa
-from pyotp.compat import unquote, urlparse, parse_qsl  # noqa
-from . import utils  # noqa
+from .hotp import HOTP as HOTP
+from .otp import OTP as OTP
+from .totp import TOTP as TOTP
 
 
-def random_base32(length=16, random=None,
-                  chars=list('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567')):
+def random_base32(
+        length: int = 16,
+        chars: Sequence[str] = list('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567')) -> str:
     if length < 16:
         raise Exception("Secrets should be at least 128 bits")
-    # Use secrets module if available (Python version >= 3.6) per PEP 506
-    try:
-        import secrets
-        random = secrets.SystemRandom()
-    except ImportError:
-        import random as _random
-        random = _random.SystemRandom()
+    random = secrets.SystemRandom()
 
     return ''.join(
         random.choice(chars)
@@ -30,14 +23,15 @@ def random_base32(length=16, random=None,
     )
 
 
-def random_hex(length=32, random=None,
-               chars=list('ABCDEF0123456789')):
+def random_hex(
+        length: int = 32,
+        chars: Sequence[str] = list('ABCDEF0123456789')) -> str:
     if length < 32:
         raise Exception("Secrets should be at least 128 bits")
-    return random_base32(length=length, random=None, chars=chars)
+    return random_base32(length=length, chars=chars)
 
 
-def parse_uri(uri):
+def parse_uri(uri: str) -> OTP:
     """
     Parses the provisioning URI for the OTP; works for either TOTP or HOTP.
 
@@ -45,16 +39,14 @@ def parse_uri(uri):
         https://github.com/google/google-authenticator/wiki/Key-Uri-Format
 
     :param uri: the hotp/totp URI to parse
-    :type uri: str
     :returns: OTP object
-    :rtype: OTP
     """
 
     # Secret (to be filled in later)
     secret = None
 
     # Data we'll parse to the correct constructor
-    otp_data = {}
+    otp_data: Dict[str, Any] = {}
 
     # Parse with URLlib
     parsed_uri = urlparse(unquote(uri))

@@ -1,45 +1,39 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
+from typing import Any, Optional
 
 import base64
 import hashlib
 import hmac
-from .compat import str
 
 
 class OTP(object):
     """
     Base class for OTP handlers.
     """
-    def __init__(self, s, digits=6, digest=hashlib.sha1, name=None, issuer=None):
+    def __init__(
+        self,
+        s: str,
+        digits: int = 6,
+        digest: Any = hashlib.sha1,
+        name: Optional[str] = None,
+        issuer: Optional[str] = None
+    ) -> None:
         """
         :param s: secret in base32 format
-        :type s: str
         :param digits: number of integers in the OTP. Some apps expect this to be 6 digits, others support more.
-        :type digits: int
         :param digest: digest function to use in the HMAC (expected to be sha1)
-        :type digest: callable
         :param name: account name
-        :type digits: str
         :param issuer: issuer
-        :type digits: str
         """
         self.digits = digits
         self.digest = digest
         self.secret = s
-        if not name and not issuer:
-            self.name = "Secret"
-            self.issuer = "PyOTP"
-        elif not name:
-            self.name = "Secret"
-        else:
-            self.name = name
+        self.name = name or 'Secret'
         self.issuer = issuer
 
-    def generate_otp(self, input):
+    def generate_otp(self, input: int) -> str:
         """
         :param input: the HMAC counter value to use as the OTP input.
             Usually either the counter, or the computed integer based on the Unix timestamp
-        :type input: int
         """
         if input < 0:
             raise ValueError('input must be positive integer')
@@ -56,14 +50,14 @@ class OTP(object):
 
         return str_code
 
-    def byte_secret(self):
+    def byte_secret(self) -> bytes:
         missing_padding = len(self.secret) % 8
         if missing_padding != 0:
             self.secret += '=' * (8 - missing_padding)
         return base64.b32decode(self.secret, casefold=True)
 
     @staticmethod
-    def int_to_bytestring(i, padding=8):
+    def int_to_bytestring(i: int, padding: int = 8) -> bytes:
         """
         Turns an integer to the OATH specified
         bytestring, which is fed to the HMAC
