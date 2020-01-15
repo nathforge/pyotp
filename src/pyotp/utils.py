@@ -47,7 +47,7 @@ def build_uri(
     otp_type = 'hotp' if is_initial_count_present else 'totp'
     base_uri = 'otpauth://{0}/{1}?{2}'
 
-    url_args: Dict[str, Union[None, int, str]] = {'secret': secret}
+    url_args = {'secret': secret}  # type: Dict[str, Union[None, int, str]]
 
     label = quote(name)
     if issuer is not None:

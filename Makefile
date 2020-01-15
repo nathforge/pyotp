@@ -10,7 +10,7 @@ lint: test_deps
 	python setup.py flake8
 
 typecheck: test_deps
-	mypy --strict src
+	mypy --strict --no-warn-unused-ignores src
 
 test: lint typecheck
 	coverage run --branch --include 'src/*' setup.py test

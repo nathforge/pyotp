@@ -1,10 +1,10 @@
 from typing import Any, Dict, Sequence
 
 import hashlib
-import secrets
 from re import split
 from urllib.parse import unquote, urlparse, parse_qsl
 
+from .compat import random
 from .hotp import HOTP as HOTP
 from .otp import OTP as OTP
 from .totp import TOTP as TOTP
@@ -15,7 +15,6 @@ def random_base32(
         chars: Sequence[str] = list('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567')) -> str:
     if length < 16:
         raise Exception("Secrets should be at least 128 bits")
-    random = secrets.SystemRandom()
 
     return ''.join(
         random.choice(chars)
@@ -46,7 +45,7 @@ def parse_uri(uri: str) -> OTP:
     secret = None
 
     # Data we'll parse to the correct constructor
-    otp_data: Dict[str, Any] = {}
+    otp_data = {}  # type: Dict[str, Any]
 
     # Parse with URLlib
     parsed_uri = urlparse(unquote(uri))
