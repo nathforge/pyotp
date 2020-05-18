@@ -6,6 +6,9 @@ API documentation
 .. automodule:: pyotp
    :members:
 
+.. automodule:: pyotp.otp
+   :members:
+
 .. automodule:: pyotp.totp
    :members:
 
