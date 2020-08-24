@@ -1,7 +1,7 @@
 PyOTP - The Python One-Time Password Library
 ============================================
 
-PyOTP is a Python library for generating and verifying one-time passwords. It can be used to implement two-factor (2FA)
+PyOTP is a Python 3 library for generating and verifying one-time passwords. It can be used to implement two-factor (2FA)
 or multi-factor (MFA) authentication methods in web applications and in other systems that require users to log in.
 
 Open MFA standards are defined in `RFC 4226 <https://tools.ietf.org/html/rfc4226>`_ (HOTP: An HMAC-Based One-Time
