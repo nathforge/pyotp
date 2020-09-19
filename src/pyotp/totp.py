@@ -79,6 +79,16 @@ class TOTP(OTP):
                                algorithm=self.digest().name,
                                digits=self.digits, period=self.interval)
 
+
     def timecode(self, for_time: datetime.datetime) -> int:
-        i = time.mktime(for_time.timetuple())
+        """
+        Accepts either a timezone naive (`for_time.tzinfo is None`) or
+        a timezone aware datetime as argument and returns the
+        corresponding counter value (timecode).
+
+        """
+        if for_time.tzinfo:
+            i = calendar.timegm(for_time.utctimetuple())
+        else:
+            i = time.mktime(for_time.timetuple())
         return int(i / self.interval)
