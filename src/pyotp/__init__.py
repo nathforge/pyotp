@@ -75,8 +75,8 @@ def parse_uri(uri: str) -> OTP:
                 raise ValueError('Invalid value for algorithm, must be SHA1, SHA256 or SHA512')
         elif key == 'digits':
             digits = int(value)
-            if digits not in [6, 8]:
-                raise ValueError('Digits may only be 6 or 8')
+            if digits not in [6, 7, 8]:
+                raise ValueError('Digits may only be 6, 7, or 8')
             otp_data['digits'] = digits
         elif key == 'period':
             otp_data['interval'] = int(value)
