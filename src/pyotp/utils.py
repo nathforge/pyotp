@@ -28,6 +28,7 @@ def build_uri(secret: str, name: str, initial_count: Optional[int] = None, issue
     :param digits: the length of the OTP generated code.
     :param period: the number of seconds the OTP generator is set to
         expire every code.
+    :param image: optional logo image url
     :returns: provisioning uri
     """
     # initial_count may be 0 as a valid param
