@@ -412,6 +412,10 @@ class ParseUriTest(unittest.TestCase):
         self.assertEqual(otp.at(0), '816660')
         self.assertEqual(otp.at(9000), '524153')
 
+        self.assertEqual(otp.provisioning_uri(name='n', issuer_name='i', image='https://test.net/test.png'),
+                        'otpauth://totp/i:n?secret=GEZDGNBV&issuer=i&algorithm=SHA512&image=https%3A%2F%2Ftest.net%2Ftest.png')
+        with self.assertRaises(Exception):
+            otp.provisioning_uri(name='n', issuer_name='i', image='nourl')
 
 class Timecop(object):
     """

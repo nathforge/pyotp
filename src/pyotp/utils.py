@@ -1,7 +1,7 @@
 import unicodedata
 from hmac import compare_digest
 from typing import Dict, Optional, Union
-from urllib.parse import quote, urlencode
+from urllib.parse import quote, urlencode, urlparse
 
 
 def build_uri(secret: str, name: str, initial_count: Optional[int] = None, issuer: Optional[str] = None,
@@ -58,6 +58,8 @@ def build_uri(secret: str, name: str, initial_count: Optional[int] = None, issue
     if is_period_set:
         url_args['period'] = period
     if image:
+        image_uri = urlparse(image)
+        assert image_uri.scheme == 'https' and image_uri.netloc and image_uri.path, f'Invalid image uri {image_uri}'
         url_args['image'] = image
 
     uri = base_uri.format(otp_type, label, urlencode(url_args).replace("+", "%20"))
