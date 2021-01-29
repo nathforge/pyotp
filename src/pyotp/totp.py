@@ -69,8 +69,9 @@ class TOTP(OTP):
             return False
 
         return utils.strings_equal(str(otp), str(self.at(for_time)))
+    def provisioning_uri(self, name: Optional[str] = None, issuer_name: Optional[str] = None,
+                         image: Optional[str] = None) -> str:
 
-    def provisioning_uri(self, name: Optional[str] = None, issuer_name: Optional[str] = None) -> str:
         """
         Returns the provisioning URI for the OTP.  This can then be
         encoded in a QR Code and used to provision an OTP app like
