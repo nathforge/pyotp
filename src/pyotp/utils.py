@@ -60,7 +60,7 @@ def build_uri(secret: str, name: str, initial_count: Optional[int] = None, issue
     if image:
         image_uri = urlparse(image)
         if image_uri.scheme != 'https' or not image_uri.netloc or not image_uri.path:
-            raise Exception('Invalid image uri {image_uri}'.format(image_uri=image_uri))
+            raise ValueError('{} is not a valid url'.format(image_uri))
         url_args['image'] = image
 
     uri = base_uri.format(otp_type, label, urlencode(url_args).replace("+", "%20"))
