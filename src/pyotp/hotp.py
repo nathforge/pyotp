@@ -44,7 +44,8 @@ class HOTP(OTP):
             self,
             name: Optional[str] = None,
             initial_count: Optional[int] = None,
-            issuer_name: Optional[str] = None) -> str:
+            issuer_name: Optional[str] = None,
+            image: Optional[str] = None) -> str:
         """
         Returns the provisioning URI for the OTP.  This can then be
         encoded in a QR Code and used to provision an OTP app like
@@ -65,5 +66,6 @@ class HOTP(OTP):
             initial_count=initial_count if initial_count else self.initial_count,
             issuer=issuer_name if issuer_name else self.issuer,
             algorithm=self.digest().name,
-            digits=self.digits
+            digits=self.digits,
+            image=image,
         )
