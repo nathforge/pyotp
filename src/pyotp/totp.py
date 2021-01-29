@@ -69,6 +69,7 @@ class TOTP(OTP):
             return False
 
         return utils.strings_equal(str(otp), str(self.at(for_time)))
+
     def provisioning_uri(self, name: Optional[str] = None, issuer_name: Optional[str] = None,
                          image: Optional[str] = None) -> str:
 
@@ -84,7 +85,7 @@ class TOTP(OTP):
         return utils.build_uri(self.secret, name if name else self.name,
                                issuer=issuer_name if issuer_name else self.issuer,
                                algorithm=self.digest().name,
-                               digits=self.digits, period=self.interval)
+                               digits=self.digits, period=self.interval, image=image)
 
     def timecode(self, for_time: datetime.datetime) -> int:
         """
