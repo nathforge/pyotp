@@ -417,6 +417,10 @@ class ParseUriTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             otp.provisioning_uri(name='n', issuer_name='i', image='nourl')
 
+        otp = pyotp.parse_uri(otp.provisioning_uri(name='n', issuer_name='i', image='https://test.net/test.png'))
+        self.assertEqual(hashlib.sha512, otp.digest)
+
+
 class Timecop(object):
     """
     Half-assed clone of timecop.rb, just enough to pass our tests.
