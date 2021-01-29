@@ -7,7 +7,7 @@ install_requires = [line.rstrip() for line in open(os.path.join(os.path.dirname(
 
 setup(
     name="pyotp",
-    version="2.4.1",
+    version="2.5.0",
     url="https://github.com/pyotp/pyotp",
     license="MIT License",
     author="PyOTP contributors",

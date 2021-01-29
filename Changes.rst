@@ -1,3 +1,12 @@
+Changes for v2.5.0 (2021-01-29)
+===============================
+
+-  Add optional image parameter to provisioning_uri (#113)
+
+-  Support for 7-digit codes in ‘parse_uri’ (#111)
+
+-  Raise default and minimum base32 secret length to 26
+
 Changes for v2.4.1 (2020-10-16)
 ===============================
 
