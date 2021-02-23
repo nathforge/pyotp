@@ -304,6 +304,21 @@ class TOTPExampleValuesFromTheRFC(unittest.TestCase):
             pyotp.random_base32(length=31)
         with self.assertRaises(ValueError):
             pyotp.random_hex(length=39)
+            
+    def test_verify_totp_with_ntp_time(self):
+        totp = pyotp.TOTP('wrn3pqx5uqxqvnqr')
+        # no way to validate actual return value
+        # just verifying however current local time totp and ntp time totp matches
+        # within +/-120sec diff range
+        local_timestamp = int(datetime.datetime.timestamp(datetime.datetime.now()))
+        totps_range = []
+        for diff in range(-120, 140, 5):
+            totp_val = totp.at(local_timestamp + diff)
+            totps_range.append(totp_val)
+        
+        ntp_totp = totp.now_ntp()
+        self.assertTrue(len(ntp_totp) == 6)
+        self.assertTrue(ntp_totp in totps_range)
 
 
 class CompareDigestTest(unittest.TestCase):

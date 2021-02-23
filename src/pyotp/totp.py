@@ -2,6 +2,9 @@ import calendar
 import datetime
 import hashlib
 import time
+from socket import AF_INET, SOCK_DGRAM, socket
+import struct
+
 from typing import Any, Union, Optional
 
 from . import utils
@@ -49,6 +52,34 @@ class TOTP(OTP):
         :returns: OTP value
         """
         return self.generate_otp(self.timecode(datetime.datetime.now()))
+    
+    def now_ntp(self) -> str:
+        """
+        Generate the OTP based on current correct time queried from NTP servers
+        :returns: OTP value
+        """
+        
+        def get_ntp_time(host="pool.ntp.org"):
+            port = 123
+            buf = 1024
+            address = (host, port)
+            msg = '\x1b' + 47 * '\0'
+    
+            # reference time (in seconds since 1900-01-01 00:00:00)
+            TIME1970 = 2208988800  # 1970-01-01 00:00:00
+    
+            # connect to server
+            client = socket(AF_INET, SOCK_DGRAM)
+            client.sendto(msg.encode('utf-8'), address)
+            msg, address = client.recvfrom(buf)
+            
+            client.close()
+    
+            t = struct.unpack("!12I", msg)[10]
+            t -= TIME1970
+            return t
+        
+        return self.at(get_ntp_time())
 
     def verify(self, otp: str, for_time: Optional[datetime.datetime] = None, valid_window: int = 0) -> bool:
         """
