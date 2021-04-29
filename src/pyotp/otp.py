@@ -37,11 +37,7 @@ class OTP(object):
         return str_code
 
     def byte_secret(self) -> bytes:
-        secret = self.secret
-        missing_padding = len(secret) % 8
-        if missing_padding != 0:
-            secret += '=' * (8 - missing_padding)
-        return base64.b32decode(secret, casefold=True)
+        return base64.b32decode(f'{self.secret:=<8}', casefold=True)
 
     @staticmethod
     def int_to_bytestring(i: int, padding: int = 8) -> bytes:
