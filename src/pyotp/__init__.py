@@ -9,7 +9,7 @@ from .otp import OTP as OTP
 from .totp import TOTP as TOTP
 
 
-def random_base32(length: int = 32, chars: Sequence[str] = list('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567')) -> str:
+def random_base32(length: int = 32, chars: Sequence[str] = list('ABCDEFGHJKLMNPQRSTUVWXYZ23456789')) -> str:
     # Note: the otpauth scheme DOES NOT use base32 padding for secret lengths not divisible by 8.
     # Some third-party tools have bugs when dealing with such secrets.
     # We might consider warning the user when generating a secret of length not divisible by 8.
