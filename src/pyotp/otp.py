@@ -1,7 +1,8 @@
-import base64
 import hashlib
 import hmac
 from typing import Any, Optional
+
+from .utils import coerce_bytes
 
 
 class OTP(object):
@@ -23,7 +24,7 @@ class OTP(object):
         """
         if input < 0:
             raise ValueError('input must be positive integer')
-        hasher = hmac.new(self.byte_secret(), self.int_to_bytestring(input), self.digest)
+        hasher = hmac.new(coerce_bytes(self.secret), self.int_to_bytestring(input), self.digest)
         hmac_hash = bytearray(hasher.digest())
         offset = hmac_hash[-1] & 0xf
         code = ((hmac_hash[offset] & 0x7f) << 24 |
@@ -35,13 +36,6 @@ class OTP(object):
             str_code = '0' + str_code
 
         return str_code
-
-    def byte_secret(self) -> bytes:
-        secret = self.secret
-        missing_padding = len(secret) % 8
-        if missing_padding != 0:
-            secret += '=' * (8 - missing_padding)
-        return base64.b32decode(secret, casefold=True)
 
     @staticmethod
     def int_to_bytestring(i: int, padding: int = 8) -> bytes:

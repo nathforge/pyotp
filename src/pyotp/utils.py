@@ -1,3 +1,4 @@
+import base64
 import unicodedata
 from hmac import compare_digest
 from typing import Dict, Optional, Union
@@ -65,6 +66,11 @@ def build_uri(secret: str, name: str, initial_count: Optional[int] = None, issue
 
     uri = base_uri.format(otp_type, label, urlencode(url_args).replace("+", "%20"))
     return uri
+
+
+def coerce_bytes(secret: str):
+    secret += -len(secret) % 8 * '='  # fix padding
+    return base64.b32decode(secret, casefold=True)
 
 
 def strings_equal(s1: str, s2: str) -> bool:

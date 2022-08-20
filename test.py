@@ -2,6 +2,7 @@
 # coding: utf-8
 
 import base64, datetime, hashlib, os, sys, unittest
+from unittest import mock
 from warnings import warn
 
 from urllib.parse import urlparse, parse_qsl
@@ -304,6 +305,17 @@ class TOTPExampleValuesFromTheRFC(unittest.TestCase):
             pyotp.random_base32(length=31)
         with self.assertRaises(ValueError):
             pyotp.random_hex(length=39)
+
+
+class CoercionTest(unittest.TestCase):
+    @mock.patch.object(pyotp.otp, "coerce_bytes", return_value=b'\00')
+    def test_call_coerce_bytes_for_otp(self, mock):
+        pyotp.OTP('').generate_otp(123)
+        self.assertTrue(mock.called)
+
+    def test_to_bytes(self):
+        func = pyotp.utils.coerce_bytes
+        self.assertEqual(func('ASDA'), b'\x04\x86')
 
 
 class CompareDigestTest(unittest.TestCase):
