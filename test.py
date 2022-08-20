@@ -313,9 +313,20 @@ class CoercionTest(unittest.TestCase):
         pyotp.OTP('').generate_otp(123)
         self.assertTrue(mock.called)
 
+    @mock.patch.object(pyotp.utils, "coerce_str")
+    def test_call_coerce_str_for_uri(self, mock):
+        pyotp.utils.build_uri('', '')
+        self.assertTrue(mock.called)
+
     def test_to_bytes(self):
         func = pyotp.utils.coerce_bytes
         self.assertEqual(func('ASDA'), b'\x04\x86')
+        self.assertEqual(func(b'\x04\x86'), b'\x04\x86')
+
+    def test_to_str(self):
+        func = pyotp.utils.coerce_str
+        self.assertEqual(func(b'\x04\x86'), 'ASDA')
+        self.assertEqual(func('ASDA'), 'ASDA')
 
 
 class CompareDigestTest(unittest.TestCase):

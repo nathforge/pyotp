@@ -1,6 +1,6 @@
 import hashlib
 import hmac
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from .utils import coerce_bytes
 
@@ -9,7 +9,7 @@ class OTP(object):
     """
     Base class for OTP handlers.
     """
-    def __init__(self, s: str, digits: int = 6, digest: Any = hashlib.sha1, name: Optional[str] = None,
+    def __init__(self, s: Union[bytes, str], digits: int = 6, digest: Any = hashlib.sha1, name: Optional[str] = None,
                  issuer: Optional[str] = None) -> None:
         self.digits = digits
         self.digest = digest

@@ -5,7 +5,7 @@ from typing import Dict, Optional, Union
 from urllib.parse import quote, urlencode, urlparse
 
 
-def build_uri(secret: str, name: str, initial_count: Optional[int] = None, issuer: Optional[str] = None,
+def build_uri(secret: Union[bytes, str], name: str, initial_count: Optional[int] = None, issuer: Optional[str] = None,
               algorithm: Optional[str] = None, digits: Optional[int] = None, period: Optional[int] = None,
               image: Optional[str] = None) -> str:
     """
@@ -43,7 +43,7 @@ def build_uri(secret: str, name: str, initial_count: Optional[int] = None, issue
     otp_type = 'hotp' if is_initial_count_present else 'totp'
     base_uri = 'otpauth://{0}/{1}?{2}'
 
-    url_args = {'secret': secret}  # type: Dict[str, Union[None, int, str]]
+    url_args = {'secret': coerce_str(secret)}  # type: Dict[str, Union[None, int, str]]
 
     label = quote(name)
     if issuer is not None:
@@ -69,8 +69,16 @@ def build_uri(secret: str, name: str, initial_count: Optional[int] = None, issue
 
 
 def coerce_bytes(secret: str):
+    if isinstance(secret, bytes):
+        return secret
     secret += -len(secret) % 8 * '='  # fix padding
     return base64.b32decode(secret, casefold=True)
+
+
+def coerce_str(secret: Union[bytes, str]):
+    if isinstance(secret, str):
+        return secret
+    return base64.b32encode(secret).rstrip(b'=').decode('ascii')
 
 
 def strings_equal(s1: str, s2: str) -> bool:
