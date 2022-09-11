@@ -3,6 +3,7 @@ from re import split
 from typing import Any, Dict, Sequence
 from urllib.parse import unquote, urlparse, parse_qsl
 
+from . import contrib
 from .compat import random
 from .hotp import HOTP as HOTP
 from .otp import OTP as OTP

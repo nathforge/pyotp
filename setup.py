@@ -13,7 +13,7 @@ setup(
     long_description=open("README.rst").read(),
     python_requires=">=3.6",
     install_requires=[],
-    packages=["pyotp"],
+    packages=["pyotp", "pyotp.contrib"],
     package_dir={"": "src"},
     package_data={"pyotp": ["py.typed"]},
     platforms=["MacOS X", "Posix"],
