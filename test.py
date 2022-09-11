@@ -306,6 +306,47 @@ class TOTPExampleValuesFromTheRFC(unittest.TestCase):
             pyotp.random_hex(length=39)
 
 
+class SteamTOTP(unittest.TestCase):
+    def test_match_examples(self):
+        steam = pyotp.contrib.Steam("BASE32SECRET3232")
+
+        self.assertEqual(steam.at(0), "2TC8B")
+        self.assertEqual(steam.at(30), "YKKK4")
+        self.assertEqual(steam.at(60), "M4HQB")
+        self.assertEqual(steam.at(90), "DTVB3")
+
+
+        steam = pyotp.contrib.Steam("FMXNK4QEGKVPULRTADY6JIDK5VHUBGZW")
+
+        self.assertEqual(steam.at(0), "C5V56")
+        self.assertEqual(steam.at(30), "QJY8Y")
+        self.assertEqual(steam.at(60), "R3WQY")
+        self.assertEqual(steam.at(90), "JG3T3")
+
+    def test_verify(self):
+        steam = pyotp.contrib.Steam("BASE32SECRET3232")
+        with Timecop(1662883100):
+            self.assertTrue(steam.verify('N3G63'))
+        with Timecop(1662883100 + 30):
+            self.assertFalse(steam.verify('N3G63'))
+
+        with Timecop(946681223):
+            self.assertTrue(steam.verify('7VP3X'))
+        with Timecop(946681223 + 30):
+            self.assertFalse(steam.verify('7VP3X'))
+
+        steam = pyotp.contrib.Steam("FMXNK4QEGKVPULRTADY6JIDK5VHUBGZW")
+        with Timecop(1662884261):
+            self.assertTrue(steam.verify('V6WKJ'))
+        with Timecop(1662884261 + 30):
+            self.assertFalse(steam.verify('V6WKJ'))
+
+        with Timecop(946681223):
+            self.assertTrue(steam.verify('4MK54'))
+        with Timecop(946681223 + 30):
+            self.assertFalse(steam.verify('4MK54'))
+
+
 class CompareDigestTest(unittest.TestCase):
     method = staticmethod(pyotp.utils.compare_digest)
 
