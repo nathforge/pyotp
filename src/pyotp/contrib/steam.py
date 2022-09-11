@@ -38,6 +38,6 @@ class Steam(TOTP):
             pos = int_code % total_chars
             char = STEAM_CHARS[int(pos)]
             steam_code += char
-            int_code /= total_chars
+            int_code //= total_chars
 
         return steam_code
