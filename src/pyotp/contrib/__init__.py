@@ -1,1 +1,1 @@
-from .steam import Steam
+from .steam import Steam  # noqa:F401
