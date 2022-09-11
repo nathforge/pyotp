@@ -15,6 +15,9 @@ API documentation
 .. automodule:: pyotp.utils
    :members:
 
+.. automodule:: pyotp.contrib.steam
+   :members:
+
 
 Table of Contents
 =================
