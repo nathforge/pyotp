@@ -74,7 +74,8 @@ class TOTP(OTP):
             for i in range(-valid_window, valid_window + 1):
                 if utils.strings_equal(str(otp), str(self.at(for_time, i))):
                     return True
-            return False
+                else:
+                    return False
 
         return utils.strings_equal(str(otp), str(self.at(for_time)))
 
