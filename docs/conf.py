@@ -10,10 +10,13 @@ version = ""
 release = ""
 language = "en"
 master_doc = "index"
-extensions = ["sphinx.ext.autodoc", "sphinx.ext.viewcode"]
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.viewcode", "sphinx.ext.intersphinx"]
 source_suffix = [".rst", ".md"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 pygments_style = "sphinx"
+intersphinx_mapping = {
+    "https://docs.python.org/3": None,
+}
 
 if "readthedocs.org" in os.getcwd().split("/"):
     with open("index.rst", "w") as fh:
