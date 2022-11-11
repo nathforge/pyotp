@@ -14,7 +14,7 @@ class HOTP(OTP):
         self,
         s: str,
         digits: int = 6,
-        digest: Any = hashlib.sha1,
+        digest: Any = None,
         name: Optional[str] = None,
         issuer: Optional[str] = None,
         initial_count: int = 0,
@@ -23,10 +23,13 @@ class HOTP(OTP):
         :param s: secret in base32 format
         :param initial_count: starting HMAC counter value, defaults to 0
         :param digits: number of integers in the OTP. Some apps expect this to be 6 digits, others support more.
-        :param digest: digest function to use in the HMAC (expected to be sha1)
+        :param digest: digest function to use in the HMAC (expected to be SHA1)
         :param name: account name
         :param issuer: issuer
         """
+        if digest is None:
+            digest = hashlib.sha1
+
         self.initial_count = initial_count
         super().__init__(s=s, digits=digits, digest=digest, name=name, issuer=issuer)
 

@@ -17,7 +17,7 @@ class TOTP(OTP):
         self,
         s: str,
         digits: int = 6,
-        digest: Any = hashlib.sha1,
+        digest: Any = None,
         name: Optional[str] = None,
         issuer: Optional[str] = None,
         interval: int = 30,
@@ -26,10 +26,13 @@ class TOTP(OTP):
         :param s: secret in base32 format
         :param interval: the time interval in seconds for OTP. This defaults to 30.
         :param digits: number of integers in the OTP. Some apps expect this to be 6 digits, others support more.
-        :param digest: digest function to use in the HMAC (expected to be sha1)
+        :param digest: digest function to use in the HMAC (expected to be SHA1)
         :param name: account name
         :param issuer: issuer
         """
+        if digest is None:
+            digest = hashlib.sha1
+
         self.interval = interval
         super().__init__(s=s, digits=digits, digest=digest, name=name, issuer=issuer)
 
@@ -37,7 +40,9 @@ class TOTP(OTP):
         """
         Accepts either a Unix timestamp integer or a datetime object.
 
-        To get the time until the next timecode change (seconds until the current OTP expires), use this instead::
+        To get the time until the next timecode change (seconds until the current OTP expires), use this instead:
+
+        .. code:: python
 
             totp = pyotp.TOTP(...)
             time_remaining = totp.interval - datetime.datetime.now().timestamp() % totp.interval
