@@ -55,6 +55,9 @@ Time-based OTPs
 ~~~~~~~~~~~~~~~
 ::
 
+    import pyotp
+    import time
+
     totp = pyotp.TOTP('base32secret3232')
     totp.now() # => '492039'
 
@@ -67,6 +70,8 @@ Counter-based OTPs
 ~~~~~~~~~~~~~~~~~~
 ::
 
+    import pyotp
+    
     hotp = pyotp.HOTP('base32secret3232')
     hotp.at(0) # => '260182'
     hotp.at(1) # => '055283'
