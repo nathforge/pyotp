@@ -18,6 +18,8 @@ class OTP(object):
         issuer: Optional[str] = None,
     ) -> None:
         self.digits = digits
+        if digits > 10:
+            raise ValueError("digits must be no greater than 10")
         self.digest = digest
         self.secret = s
         self.name = name or "Secret"
@@ -39,11 +41,8 @@ class OTP(object):
             | (hmac_hash[offset + 2] & 0xFF) << 8
             | (hmac_hash[offset + 3] & 0xFF)
         )
-        str_code = str(code % 10**self.digits)
-        while len(str_code) < self.digits:
-            str_code = "0" + str_code
-
-        return str_code
+        str_code = str(10_000_000_000 + (code % 10**self.digits))
+        return str_code[-self.digits:]
 
     def byte_secret(self) -> bytes:
         secret = self.secret
