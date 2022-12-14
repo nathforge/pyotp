@@ -42,7 +42,7 @@ class OTP(object):
             | (hmac_hash[offset + 3] & 0xFF)
         )
         str_code = str(10_000_000_000 + (code % 10**self.digits))
-        return str_code[-self.digits:]
+        return str_code[-self.digits :]
 
     def byte_secret(self) -> bytes:
         secret = self.secret
