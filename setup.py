@@ -11,7 +11,7 @@ setup(
     author_email="kislyuk@gmail.com",
     description="Python One Time Password Library",
     long_description=open("README.rst").read(),
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     install_requires=[],
     packages=["pyotp", "pyotp.contrib"],
     package_dir={"": "src"},

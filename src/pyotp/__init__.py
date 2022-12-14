@@ -41,7 +41,7 @@ def parse_uri(uri: str) -> OTP:
     secret = None
 
     # Data we'll parse to the correct constructor
-    otp_data = {}  # type: Dict[str, Any]
+    otp_data: Dict[str, Any] = {}
 
     # Parse with URLlib
     parsed_uri = urlparse(unquote(uri))
