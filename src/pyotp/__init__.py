@@ -43,6 +43,9 @@ def parse_uri(uri: str) -> OTP:
     # Encoder (to be filled in later)
     encoder = None
 
+    # Digits (to be filled in later)
+    digits = None
+
     # Data we'll parse to the correct constructor
     otp_data: Dict[str, Any] = {}
 
@@ -90,7 +93,6 @@ def parse_uri(uri: str) -> OTP:
             raise ValueError("{} is not a valid parameter".format(key))
     
     if encoder != "steam":
-        digits = otp_data.get("digits")
         if digits is not None and digits not in [6, 7, 8]:
             raise ValueError("Digits may only be 6, 7, or 8")
     
