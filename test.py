@@ -364,6 +364,13 @@ class ParseUriTest(unittest.TestCase):
         with self.assertRaises(ValueError) as cm:
             pyotp.parse_uri("otpauth://totp?algorithm=aes")
         self.assertEqual("Invalid value for algorithm, must be SHA1, SHA256 or SHA512", str(cm.exception))
+    
+    def test_parse_steam(self):
+        otp = pyotp.parse_uri("otpauth://totp/Steam:?secret=SOME_SECRET&encoder=steam")
+        self.assertEqual(type(otp), pyotp.contrib.Steam)
+
+        otp = pyotp.parse_uri("otpauth://totp/Steam:?secret=SOME_SECRET")
+        self.assertNotEqual(type(otp), pyotp.contrib.Steam)
 
     @unittest.skipIf(sys.version_info < (3, 6), "Skipping test that requires deterministic dict key enumeration")
     def test_algorithms(self):
@@ -420,6 +427,20 @@ class ParseUriTest(unittest.TestCase):
         otp = pyotp.parse_uri(otp.provisioning_uri(name="n", issuer_name="i", image="https://test.net/test.png"))
         self.assertEqual(hashlib.sha512, otp.digest)
 
+        otp = pyotp.parse_uri("otpauth://totp/Steam:?secret=FMXNK4QEGKVPULRTADY6JIDK5VHUBGZW&encoder=steam")
+        self.assertEqual(type(otp), pyotp.contrib.Steam)
+        self.assertEqual(otp.at(0), "C5V56")
+        self.assertEqual(otp.at(30), "QJY8Y")
+        self.assertEqual(otp.at(60), "R3WQY")
+        self.assertEqual(otp.at(90), "JG3T3")
+
+        # period and digits should be ignored
+        otp = pyotp.parse_uri("otpauth://totp/Steam:?secret=FMXNK4QEGKVPULRTADY6JIDK5VHUBGZW&period=15&digits=7&encoder=steam")
+        self.assertEqual(type(otp), pyotp.contrib.Steam)
+        self.assertEqual(otp.at(0), "C5V56")
+        self.assertEqual(otp.at(30), "QJY8Y")
+        self.assertEqual(otp.at(60), "R3WQY")
+        self.assertEqual(otp.at(90), "JG3T3")
 
 class Timecop(object):
     """

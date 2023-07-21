@@ -40,6 +40,9 @@ def parse_uri(uri: str) -> OTP:
     # Secret (to be filled in later)
     secret = None
 
+    # Encoder (to be filled in later)
+    encoder = None
+
     # Data we'll parse to the correct constructor
     otp_data: Dict[str, Any] = {}
 
@@ -74,10 +77,10 @@ def parse_uri(uri: str) -> OTP:
                 otp_data["digest"] = hashlib.sha512
             else:
                 raise ValueError("Invalid value for algorithm, must be SHA1, SHA256 or SHA512")
+        elif key == "encoder":
+            encoder = value
         elif key == "digits":
             digits = int(value)
-            if digits not in [6, 7, 8]:
-                raise ValueError("Digits may only be 6, 7, or 8")
             otp_data["digits"] = digits
         elif key == "period":
             otp_data["interval"] = int(value)
@@ -85,11 +88,18 @@ def parse_uri(uri: str) -> OTP:
             otp_data["initial_count"] = int(value)
         elif key != "image":
             raise ValueError("{} is not a valid parameter".format(key))
-
+    
+    if encoder != "steam":
+        digits = otp_data.get("digits")
+        if digits is not None and digits not in [6, 7, 8]:
+            raise ValueError("Digits may only be 6, 7, or 8")
+    
     if not secret:
         raise ValueError("No secret found in URI")
 
     # Create objects
+    if encoder == "steam":
+        return contrib.Steam(secret, **otp_data)
     if parsed_uri.netloc == "totp":
         return TOTP(secret, **otp_data)
     elif parsed_uri.netloc == "hotp":
