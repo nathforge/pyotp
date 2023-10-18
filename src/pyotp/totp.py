@@ -24,11 +24,11 @@ class TOTP(OTP):
     ) -> None:
         """
         :param s: secret in base32 format
-        :param interval: the time interval in seconds for OTP. This defaults to 30.
         :param digits: number of integers in the OTP. Some apps expect this to be 6 digits, others support more.
         :param digest: digest function to use in the HMAC (expected to be SHA1)
         :param name: account name
         :param issuer: issuer
+        :param interval: the time interval in seconds for OTP. This defaults to 30.
         """
         if digest is None:
             digest = hashlib.sha1
