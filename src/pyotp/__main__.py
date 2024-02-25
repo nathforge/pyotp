@@ -5,8 +5,8 @@ parser = argparse.ArgumentParser()
 
 
 def parse_terminal_arguments():
-    parser.add_argument('secret', nargs='?', help=f'Base32 secret')
-    parser.add_argument('--hotp', action='store', metavar='NUMBER', type=int, help='Specify HOTP position\\number ')
+    parser.add_argument('secret', nargs='?', help=f'base32 secret')
+    parser.add_argument('--hotp', action='store', metavar='NUMBER', type=int, help='specify HOTP position\\number ')
     parser.add_argument('--hex', action='store_true', help='returns a 40-character hex-encoded secret')
     parser.add_argument('-v', '--version', action='version', version=f'PyOTP v.{__version__}')
     return vars(parser.parse_args())
