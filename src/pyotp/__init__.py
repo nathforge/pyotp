@@ -9,6 +9,8 @@ from .hotp import HOTP as HOTP
 from .otp import OTP as OTP
 from .totp import TOTP as TOTP
 
+__version__ = "2.9.0"
+
 
 def random_base32(length: int = 32, chars: Sequence[str] = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567")) -> str:
     # Note: the otpauth scheme DOES NOT use base32 padding for secret lengths not divisible by 8.
