@@ -44,7 +44,10 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'pyotp = pyotp.__main__:main'
+            'pyotp = pyotp.__main__:generate',
+            'pyotph = pyotp.__main__:generate_hex',
+            'pytotp = pyotp.__main__:otp',
+            'pyhotp = pyotp.__main__:hotp',
         ]
     },
 )
