@@ -1,36 +1,53 @@
 from pyotp import __version__, TOTP, HOTP, random_base32, random_hex
-import argparse
-
-parser = argparse.ArgumentParser()
+from sys import argv
 
 
-def parse_terminal_arguments():
-    parser.add_argument('secret', nargs='?', help=f'base32 secret')
-    parser.add_argument('--hotp', action='store', metavar='NUMBER', type=int, help='specify HOTP position\\number ')
-    parser.add_argument('--hex', action='store_true', help='returns a 40-character hex-encoded secret')
-    parser.add_argument('-v', '--version', action='version', version=f'PyOTP v.{__version__}')
-    return vars(parser.parse_args())
-
-
-def main(): # TODO: pass args to set_global_server_repo() set_github_token('')
-    args = parse_terminal_arguments()
-
-    if not args['secret']:
-        if not args['hex']:
-            print(random_base32())
+def argument_parser():
+    if len(argv) > 1:
+        if argv[1] in ('-v', '--version'):
+            print(f'PyOTP v.{__version__}')
         else:
-            print(random_hex())
+            print(f'''PyOTP v.{__version__} usage:\
+            \n  pyotp  - Generate a 32-character base32 secret\
+            \n  pyotph - Generate a  hex-encoded base32 secret\
+            \n  pytotp - Return TOTP digits from base32 secret\
+            \n  pyhotp - Return HOTP digits from base32 secret\
+            ''')
         exit()
+ 
 
+def generate(hex=False): 
+    argument_parser()
+    if not hex:
+        print(random_base32())
+    else:
+        print(random_hex())
+
+
+def generate_hex(): 
+    generate(hex=True)
+
+
+def otp(is_totp=True):
+    argument_parser()
     try:
-        if not args['hotp']:
-            print(TOTP(args['secret']).now())
+        if is_totp:
+            print("Enter base32 secret: ", end='')
+            secret = input()
+            print(TOTP(secret).now())
         else:
-            print(HOTP(args['secret']).at(args['hotp']))
+            print("Enter base32 secret: ", end='')
+            secret = input()
+            print("Enter number: ", end='')
+            number = int(input())
+            print(HOTP(secret).at(number))
     except:
-        print(f'Invalid secret: {args["secret"]}')
+        print(f'Invalid secret: {secret}')
 
+
+def hotp(): 
+    otp(is_totp=False)
 
 
 if __name__ == "__main__":
-    main()
+    generate()
