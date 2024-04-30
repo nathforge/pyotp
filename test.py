@@ -364,7 +364,7 @@ class ParseUriTest(unittest.TestCase):
         with self.assertRaises(ValueError) as cm:
             pyotp.parse_uri("otpauth://totp?algorithm=aes")
         self.assertEqual("Invalid value for algorithm, must be SHA1, SHA256 or SHA512", str(cm.exception))
-    
+
     def test_parse_steam(self):
         otp = pyotp.parse_uri("otpauth://totp/Steam:?secret=SOME_SECRET&encoder=steam")
         self.assertEqual(type(otp), pyotp.contrib.Steam)
@@ -425,6 +425,16 @@ class ParseUriTest(unittest.TestCase):
             otp.provisioning_uri(name="n", issuer_name="i", image="nourl")
 
         otp = pyotp.parse_uri(otp.provisioning_uri(name="n", issuer_name="i", image="https://test.net/test.png"))
+        self.assertEqual(hashlib.sha512, otp.digest)
+
+        self.assertEqual(
+            otp.provisioning_uri(name="n", issuer_name="i", color="FF0000"),
+            "otpauth://totp/i:n?secret=GEZDGNBV&issuer=i&algorithm=SHA512&color=FF0000",
+        )
+        with self.assertRaises(ValueError):
+            otp.provisioning_uri(name="n", issuer_name="i", color="invalid_value")
+
+        otp = pyotp.parse_uri(otp.provisioning_uri(name="n", issuer_name="i", color="FF0000"))
         self.assertEqual(hashlib.sha512, otp.digest)
 
         otp = pyotp.parse_uri("otpauth://totp/Steam:?secret=FMXNK4QEGKVPULRTADY6JIDK5VHUBGZW&encoder=steam")

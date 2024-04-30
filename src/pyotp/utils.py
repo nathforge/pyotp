@@ -1,5 +1,6 @@
 import unicodedata
 from hmac import compare_digest
+import re
 from typing import Dict, Optional, Union
 from urllib.parse import quote, urlencode, urlparse
 
@@ -13,6 +14,7 @@ def build_uri(
     digits: Optional[int] = None,
     period: Optional[int] = None,
     image: Optional[str] = None,
+    color: Optional[str] = None,
 ) -> str:
     """
     Returns the provisioning URI for the OTP; works for either TOTP or HOTP.
@@ -69,6 +71,10 @@ def build_uri(
         if image_uri.scheme != "https" or not image_uri.netloc or not image_uri.path:
             raise ValueError("{} is not a valid url".format(image_uri))
         url_args["image"] = image
+    if color:
+        if not re.match(r'[0-9a-fA-F]{6}', color):
+            raise ValueError("{} is not a valid RRGGBB hex color value".format(color))
+        url_args["color"] = color
 
     uri = base_uri.format(otp_type, label, urlencode(url_args).replace("+", "%20"))
     return uri

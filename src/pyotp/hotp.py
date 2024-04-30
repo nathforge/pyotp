@@ -57,6 +57,7 @@ class HOTP(OTP):
         initial_count: Optional[int] = None,
         issuer_name: Optional[str] = None,
         image: Optional[str] = None,
+        color: Optional[str] = None,
     ) -> str:
         """
         Returns the provisioning URI for the OTP.  This can then be
@@ -80,4 +81,5 @@ class HOTP(OTP):
             algorithm=self.digest().name,
             digits=self.digits,
             image=image,
+            color=color,
         )
