@@ -350,10 +350,6 @@ class ParseUriTest(unittest.TestCase):
         self.assertEqual("Not a supported OTP type", str(cm.exception))
 
         with self.assertRaises(ValueError) as cm:
-            pyotp.parse_uri("otpauth://totp?foo=secret")
-        self.assertEqual("foo is not a valid parameter", str(cm.exception))
-
-        with self.assertRaises(ValueError) as cm:
             pyotp.parse_uri("otpauth://totp?digits=-1")
         self.assertEqual("Digits may only be 6, 7, or 8", str(cm.exception))
 
@@ -364,7 +360,7 @@ class ParseUriTest(unittest.TestCase):
         with self.assertRaises(ValueError) as cm:
             pyotp.parse_uri("otpauth://totp?algorithm=aes")
         self.assertEqual("Invalid value for algorithm, must be SHA1, SHA256 or SHA512", str(cm.exception))
-    
+
     def test_parse_steam(self):
         otp = pyotp.parse_uri("otpauth://totp/Steam:?secret=SOME_SECRET&encoder=steam")
         self.assertEqual(type(otp), pyotp.contrib.Steam)
@@ -435,12 +431,17 @@ class ParseUriTest(unittest.TestCase):
         self.assertEqual(otp.at(90), "JG3T3")
 
         # period and digits should be ignored
-        otp = pyotp.parse_uri("otpauth://totp/Steam:?secret=FMXNK4QEGKVPULRTADY6JIDK5VHUBGZW&period=15&digits=7&encoder=steam")
+        otp = pyotp.parse_uri(
+            "otpauth://totp/Steam:?secret=FMXNK4QEGKVPULRTADY6JIDK5VHUBGZW&period=15&digits=7&encoder=steam"
+        )
         self.assertEqual(type(otp), pyotp.contrib.Steam)
         self.assertEqual(otp.at(0), "C5V56")
         self.assertEqual(otp.at(30), "QJY8Y")
         self.assertEqual(otp.at(60), "R3WQY")
         self.assertEqual(otp.at(90), "JG3T3")
+
+        pyotp.parse_uri("otpauth://totp?secret=abc&image=foobar")
+
 
 class Timecop(object):
     """

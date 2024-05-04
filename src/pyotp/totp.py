@@ -83,10 +83,7 @@ class TOTP(OTP):
 
         return utils.strings_equal(str(otp), str(self.at(for_time)))
 
-    def provisioning_uri(
-        self, name: Optional[str] = None, issuer_name: Optional[str] = None, image: Optional[str] = None
-    ) -> str:
-
+    def provisioning_uri(self, name: Optional[str] = None, issuer_name: Optional[str] = None, **kwargs) -> str:
         """
         Returns the provisioning URI for the OTP.  This can then be
         encoded in a QR Code and used to provision an OTP app like
@@ -103,7 +100,7 @@ class TOTP(OTP):
             algorithm=self.digest().name,
             digits=self.digits,
             period=self.interval,
-            image=image,
+            **kwargs,
         )
 
     def timecode(self, for_time: datetime.datetime) -> int:

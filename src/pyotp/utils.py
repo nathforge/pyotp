@@ -12,7 +12,7 @@ def build_uri(
     algorithm: Optional[str] = None,
     digits: Optional[int] = None,
     period: Optional[int] = None,
-    image: Optional[str] = None,
+    **kwargs,
 ) -> str:
     """
     Returns the provisioning URI for the OTP; works for either TOTP or HOTP.
@@ -35,7 +35,7 @@ def build_uri(
     :param digits: the length of the OTP generated code.
     :param period: the number of seconds the OTP generator is set to
         expire every code.
-    :param image: optional logo image url
+    :param kwargs: other query string parameters to include in the URI
     :returns: provisioning uri
     """
     # initial_count may be 0 as a valid param
@@ -64,11 +64,14 @@ def build_uri(
         url_args["digits"] = digits
     if is_period_set:
         url_args["period"] = period
-    if image:
-        image_uri = urlparse(image)
-        if image_uri.scheme != "https" or not image_uri.netloc or not image_uri.path:
-            raise ValueError("{} is not a valid url".format(image_uri))
-        url_args["image"] = image
+    for k, v in kwargs.items():
+        if not isinstance(v, str):
+            raise ValueError("All otpauth uri parameters must be strings")
+        if k == "image":
+            image_uri = urlparse(v)
+            if image_uri.scheme != "https" or not image_uri.netloc or not image_uri.path:
+                raise ValueError("{} is not a valid url".format(image_uri))
+        url_args[k] = v
 
     uri = base_uri.format(otp_type, label, urlencode(url_args).replace("+", "%20"))
     return uri

@@ -56,7 +56,7 @@ class HOTP(OTP):
         name: Optional[str] = None,
         initial_count: Optional[int] = None,
         issuer_name: Optional[str] = None,
-        image: Optional[str] = None,
+        **kwargs,
     ) -> str:
         """
         Returns the provisioning URI for the OTP.  This can then be
@@ -79,5 +79,5 @@ class HOTP(OTP):
             issuer=issuer_name if issuer_name else self.issuer,
             algorithm=self.digest().name,
             digits=self.digits,
-            image=image,
+            **kwargs,
         )

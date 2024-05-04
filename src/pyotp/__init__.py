@@ -89,13 +89,11 @@ def parse_uri(uri: str) -> OTP:
             otp_data["interval"] = int(value)
         elif key == "counter":
             otp_data["initial_count"] = int(value)
-        elif key != "image":
-            raise ValueError("{} is not a valid parameter".format(key))
-    
+
     if encoder != "steam":
         if digits is not None and digits not in [6, 7, 8]:
             raise ValueError("Digits may only be 6, 7, or 8")
-    
+
     if not secret:
         raise ValueError("No secret found in URI")
 
