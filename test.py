@@ -403,6 +403,11 @@ class ParseUriTest(unittest.TestCase):
             otp.provisioning_uri(name="n", issuer_name="i"), "otpauth://hotp/i:n?secret=GEZDGNBV&issuer=i&counter=1"
         )
 
+        otp = pyotp.parse_uri("otpauth://hotp?algorithm=sha1&secret=GEZDGNBV")
+        self.assertEqual(hashlib.sha1, otp.digest)
+        self.assertEqual(otp.at(0), "734055")
+        self.assertEqual(otp.at(1), "662488")
+
         otp = pyotp.parse_uri("otpauth://totp?algorithm=SHA1&secret=GEZDGNBV&algorithm=SHA256")
         self.assertEqual(hashlib.sha256, otp.digest)
         self.assertEqual(otp.at(0), "918961")

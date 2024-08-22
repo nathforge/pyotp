@@ -72,11 +72,12 @@ def parse_uri(uri: str) -> OTP:
                 raise ValueError("If issuer is specified in both label and parameters, it should be equal.")
             otp_data["issuer"] = value
         elif key == "algorithm":
-            if value == "SHA1":
+            upper_value = value.upper()
+            if upper_value == "SHA1":
                 otp_data["digest"] = hashlib.sha1
-            elif value == "SHA256":
+            elif upper_value == "SHA256":
                 otp_data["digest"] = hashlib.sha256
-            elif value == "SHA512":
+            elif upper_value == "SHA512":
                 otp_data["digest"] = hashlib.sha512
             else:
                 raise ValueError("Invalid value for algorithm, must be SHA1, SHA256 or SHA512")
