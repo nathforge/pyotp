@@ -334,6 +334,16 @@ class ValidWindowTest(unittest.TestCase):
         self.assertTrue(totp.verify("681610", 200, 1))
         self.assertFalse(totp.verify("195979", 200, 1))
 
+class DigestFunctionTest(unittest.TestCase):
+    def test_md5(self):
+        with self.assertRaises(ValueError) as cm:
+            pyotp.OTP(s="secret", digest=hashlib.md5)
+        self.assertEqual("selected digest function must generate digest size greater than or equals to 18 bytes", str(cm.exception))
+
+    def test_shake128(self):
+        with self.assertRaises(ValueError) as cm:
+            pyotp.OTP(s="secret", digest=hashlib.shake_128)
+        self.assertEqual("selected digest function must generate digest size greater than or equals to 18 bytes", str(cm.exception))
 
 class ParseUriTest(unittest.TestCase):
     def test_invalids(self):

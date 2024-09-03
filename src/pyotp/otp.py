@@ -21,6 +21,11 @@ class OTP(object):
         if digits > 10:
             raise ValueError("digits must be no greater than 10")
         self.digest = digest
+        if digest in [
+            hashlib.md5,
+            hashlib.shake_128
+        ]:
+            raise ValueError("selected digest function must generate digest size greater than or equals to 18 bytes")
         self.secret = s
         self.name = name or "Secret"
         self.issuer = issuer
@@ -33,6 +38,8 @@ class OTP(object):
         if input < 0:
             raise ValueError("input must be positive integer")
         hasher = hmac.new(self.byte_secret(), self.int_to_bytestring(input), self.digest)
+        if hasher.digest_size < 18:
+            raise ValueError("digest size is lower than 18 bytes, which will trigger error on otp generation")
         hmac_hash = bytearray(hasher.digest())
         offset = hmac_hash[-1] & 0xF
         code = (

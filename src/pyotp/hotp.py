@@ -29,6 +29,11 @@ class HOTP(OTP):
         """
         if digest is None:
             digest = hashlib.sha1
+        elif digest in [
+            hashlib.md5,
+            hashlib.shake_128
+        ]:
+            raise ValueError("selected digest function must generate digest size greater than or equals to 18 bytes")
 
         self.initial_count = initial_count
         super().__init__(s=s, digits=digits, digest=digest, name=name, issuer=issuer)
