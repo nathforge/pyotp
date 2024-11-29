@@ -15,7 +15,7 @@ source_suffix = [".rst", ".md"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 pygments_style = "sphinx"
 intersphinx_mapping = {
-    "https://docs.python.org/3": None,
+    "python": ("https://docs.python.org/3", None),
 }
 templates_path = [""]
 ogp_site_url = "https://pyauth.github.io/pyotp/"
