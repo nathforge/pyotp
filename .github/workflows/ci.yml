@@ -4,13 +4,13 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-20.04, ubuntu-latest, macos-latest
     strategy:
       matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
@@ -18,12 +18,16 @@ jobs:
     - run: make install
     - run: make lint
     - run: make test
-    - uses: codecov/codecov-action@v3
-  black:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: psf/black@stable
+    - uses: codecov/codecov-action@v5
   isort:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: isort/isort-action@v1.1.0
+  ruff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/ruff-action@v1
+      - uses: astral-sh/ruff-action@v1
+        with:
+          args: "format --check"
