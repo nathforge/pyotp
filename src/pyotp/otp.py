@@ -21,10 +21,7 @@ class OTP(object):
         if digits > 10:
             raise ValueError("digits must be no greater than 10")
         self.digest = digest
-        if digest in [
-            hashlib.md5,
-            hashlib.shake_128
-        ]:
+        if digest in [hashlib.md5, hashlib.shake_128]:
             raise ValueError("selected digest function must generate digest size greater than or equals to 18 bytes")
         self.secret = s
         self.name = name or "Secret"
