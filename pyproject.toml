@@ -1,3 +1,49 @@
+[project]
+name = "PyOTP"
+description = "Python One Time Password Library"
+readme = "README.rst"
+requires-python = ">=3.8"
+license = { text = "MIT License" }
+authors = [{ name = "Andrey Kislyuk"}, {email = "kislyuk@gmail.com" }]
+maintainers = [{ name = "Andrey Kislyuk"}, {email = "kislyuk@gmail.com" }]
+dynamic = ["version"]
+classifiers = [
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: MacOS :: MacOS X",
+  "Operating System :: POSIX",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+  "Development Status :: 5 - Production/Stable",
+  "Topic :: Software Development",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.optional-dependencies]
+test = ["coverage", "wheel", "ruff", "mypy"]
+
+[project.urls]
+"Homepage"= "https://github.com/pyauth/pyotp"
+"Documentation"= "https://github.com/pyauth/pyotp"
+"Source Code"= "https://github.com/pyauth/pyotp"
+"Issue Tracker"= "https://github.com/pyauth/pyotp/issues"
+"Change Log"= "https://github.com/pyauth/pyotp/blob/main/Changes.rst"
+
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
 [tool.black]
 line-length = 120
 
