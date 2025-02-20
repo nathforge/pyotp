@@ -3,13 +3,13 @@ name = "PyOTP"
 description = "Python One Time Password Library"
 readme = "README.rst"
 requires-python = ">=3.8"
-license = { text = "MIT License" }
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [{ name = "Andrey Kislyuk"}, {email = "kislyuk@gmail.com" }]
 maintainers = [{ name = "Andrey Kislyuk"}, {email = "kislyuk@gmail.com" }]
 dynamic = ["version"]
 classifiers = [
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: Apache Software License",
   "Operating System :: MacOS :: MacOS X",
   "Operating System :: POSIX",
   "Programming Language :: Python",
