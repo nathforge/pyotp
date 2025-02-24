@@ -4,7 +4,7 @@ test_deps:
 	python -m pip install .[test]
 
 lint:
-	ruff src
+	ruff check src
 	mypy --install-types --non-interactive --check-untyped-defs src
 
 test:
